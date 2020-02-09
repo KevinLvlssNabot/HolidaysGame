@@ -13,7 +13,7 @@ void Color(int t,int f)
 
 // Structures
 struct Perso_t{
-  char nom[15];
+  char nom[20];
 };
 typedef struct Perso_t perso;
 
@@ -35,13 +35,31 @@ int welcome(int newGame){
 }
 
 void reveil(){
-  printf("\n");
+  printf("*Cough*, *Cough*, Haah, Haah.\nOu... Ou suis.. Je... \nQu'est... Ce que.. *Cough* *Cough*\nJ'ai froid, ma robe est... \n");
+  Sleep(8000); system("cls");
+  printf("AHHHHHHH ! Pourquoi suis-je recouverte de sang ?! Et cette obscurite... Aidez.. Moi.\nS'il... vous.. plait.\nMere...\n"); Sleep (7000); system("cls");
+  Color (8,0); printf("** Ma fille.\nN'oublie jamais, que meme dans les moments les plus sombres.\nTu es une danseuse avant tout, et ta danse peut briser les plus hautes barrieres.\nRappelle toi les paroles de ton pere:\n");
+  printf("Il y aura, au cours de ta vie,\nDes situations hors de ton controle,\nDes instants de honte, de joie, voire de folie,\nMais c'est au bout du chemin qu'existera ton role.**\n"); Sleep (20000); system("cls");
+  printf("**Ma fille, leve-toi, et avance vers ta destinee, vers ce chemin que toi seule peut faconner.\n");
 }
+
+void nomPP(char nomJoueur[20]){
+  printf("Entrez le nom de l'heroine.\n");
+  scanf("%s", nomJoueur); system("cls");
+  printf("Je t'aime %s**\n", nomJoueur); Color (15,0);
+  printf("Mere... *Cough*.. Je dois, avancer... trouver... la sortie.\n");
+}
+
+//  Sleep(7000); system("cls"); Color (11,0);
+//  printf("La bas ! Il y a quelqu'un au fond de cette impasse ! Vite amenez-vous !\nEh! Eh! Vous m'entendez ? Reveillez-vous !\nAIDEZ-MOI A LA PORTER, BANDE DE FAINEANTS !\n");
+
+
 // Main
 int main(int argc, char const *argv[]) {
 
 // variables
     int newGame;
+    perso persoPrincipal;
 // Ecran d'accueil
 Color (6,0);
   titre();
@@ -51,8 +69,9 @@ Color (15,0);
   welcome(newGame);
 system("cls");
 
-
-
+// Debut du jeu
+  reveil(); nomPP(persoPrincipal.nom);
+Color (15,0);
 
 
 
