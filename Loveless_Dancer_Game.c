@@ -17,6 +17,14 @@ struct Perso_t{
 };
 typedef struct Perso_t perso;
 
+struct Zone_t{
+  char nom[30];
+  int salleMax;
+  char salle[20][30];
+};
+typedef struct Zone_t zone;
+
+
 // Fonctions
 void titre(){
   printf(" -----------------------------------\n\n");
@@ -50,6 +58,34 @@ void nomPP(char nomJoueur[20]){
   printf("Mere... *Cough*.. Je dois, avancer... trouver... la sortie.\n");
 }
 
+void carte(char nomZone[20], int n, char salle[20][30], int position, int choixDirection, int sortie){
+while (sortie == 0) {
+  printf("-------------- %s | %s ------------\n", nomZone, salle[position]);
+    if (position < n && position > 0) {
+        printf("Avancer [0], Reculer[1]\n");
+      } else if (position == 0) {
+        printf("Avancer [0]\n");
+      } else if (position == n){
+        printf("Reculer[1], Sortir[2]\n");
+      }
+    scanf("%d", &choixDirection);
+      while (choixDirection < 0 || choixDirection > 1) {
+        printf("Mere m'aurait dit: 'chaque chose en son temps, ma fille'.\n");
+        scanf("%d", &choixDirection);
+      }
+          if (choixDirection == 0) {
+            printf("Vous avancez.\n");
+            position++;
+              if (position == n) {
+                printf("Vous sortez de la zone.\n");
+                sortie = 1;
+              }
+          } else if (choixDirection == 1 && position > 0) {
+            printf("Vous reculez.\n");
+            position = position -1;
+          }
+  }
+}
 //  Sleep(7000); system("cls"); Color (11,0);
 //  printf("La bas ! Il y a quelqu'un au fond de cette impasse ! Vite amenez-vous !\nEh! Eh! Vous m'entendez ? Reveillez-vous !\nAIDEZ-MOI A LA PORTER, BANDE DE FAINEANTS !\n");
 
@@ -59,7 +95,15 @@ int main(int argc, char const *argv[]) {
 
 // variables
     int newGame;
+    int position = 0;
+    int choixDirection;
+    int sortie = 0;
+    zone grotteDepart = {"Grotte", 2, {"Fond de la grotte","Mi-Chemin","Sortie"}};
     perso persoPrincipal;
+
+
+    carte(grotteDepart.nom,grotteDepart.salleMax,grotteDepart.salle, position, choixDirection, sortie);
+
 // Ecran d'accueil
 Color (6,0);
   titre();
@@ -72,7 +116,9 @@ system("cls");
 // Debut du jeu
   reveil(); nomPP(persoPrincipal.nom);
 Color (15,0);
-
+    while (position != grotteDepart.salleMax) {
+      carte(grotteDepart.nom,grotteDepart.salleMax,grotteDepart.salle[grotteDepart.salleMax], position, choixDirection, sortie);
+    }
 
 
   return 0;
