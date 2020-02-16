@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include <time.h>
 
 // Setup Couleur
 void Color(int t,int f)
@@ -14,6 +15,13 @@ void Color(int t,int f)
 // Structures
 struct Perso_t{
   char nom[20];
+  int pv;
+  int attaqueBase;
+  int attaqueCombat;
+  int exp;
+  int levelup;
+  int niveau;
+  int choixAction;
 };
 typedef struct Perso_t perso;
 
@@ -23,6 +31,18 @@ struct Zone_t{
   char salle[20][30];
 };
 typedef struct Zone_t zone;
+
+struct Ennemis_t{
+  char nom[20];
+  int pv;
+  int attaqueBase;
+  int attaqueCombat;
+  int expDonnee;
+  int max;
+  int min;
+  int actionM;
+};
+typedef struct Ennemis_t ennemis;
 
 
 // Fonctions
@@ -58,32 +78,86 @@ void nomPP(char nomJoueur[20]){
   printf("Mere... *Cough*.. Je dois, avancer... trouver... la sortie.\n");
 }
 
-void carte(char nomZone[20], int n, char salle[20][30], int position, int choixDirection, int sortie){
-while (sortie == 0) {
-  printf("-------------- %s | %s ------------\n", nomZone, salle[position]);
-    if (position < n && position > 0) {
-        printf("Avancer [0], Reculer[1]\n");
-      } else if (position == 0) {
-        printf("Avancer [0]\n");
-      } else if (position == n){
-        printf("Reculer[1], Sortir[2]\n");
-      }
-    scanf("%d", &choixDirection);
-      while (choixDirection < 0 || choixDirection > 1) {
-        printf("Mere m'aurait dit: 'chaque chose en son temps, ma fille'.\n");
-        scanf("%d", &choixDirection);
-      }
-          if (choixDirection == 0) {
-            printf("Vous avancez.\n");
-            position++;
-              if (position == n) {
-                printf("Vous sortez de la zone.\n");
-                sortie = 1;
-              }
-          } else if (choixDirection == 1 && position > 0) {
-            printf("Vous reculez.\n");
-            position = position -1;
+//int carte(char nomZone[20], int n, char salle[20][30], int position, int choixDirection, int sortie){
+//
+//  printf("-------------- %s | %s ------------\n", nomZone, salle[position]);
+//    if (position < n && position > 0) {
+//        printf("Avancer [0], Reculer[1]\n");
+//      } else if (position == 0) {
+//        printf("Avancer [0]\n");
+//      } else if (position == n){
+//        printf("Reculer[1], Sortir[2]\n");
+//      }
+//    scanf("%d", &choixDirection);
+//      while (choixDirection < 0 || choixDirection > 2) {
+//        printf("Mere m'aurait dit: 'chaque chose en son temps, ma fille'.\n");
+//        scanf("%d", &choixDirection);
+//      }
+//          if (choixDirection == 0) {
+//            printf("Vous avancez.\n");
+//            position++;
+//          } else if (choixDirection == 1 && position > 0) {
+//            printf("Vous reculez.\n");
+//            position = position -1;
+//          } else if (choixDirection == 2 && position == n) {
+//            printf("Vous sortez de la zone.\n");
+//            sortie = 1;
+//          }
+//}
+
+int combat1v1(int pv, int pvM, char nom[20], char nomM[20], int choixAction, int actionM, int MAX, int MIN, int finCombat, int attaque, int attaqueM, int attaqueCombat, int attaqueCombatM, int xpM, int xp){
+    printf("%s apparait.\n", nomM);
+  while (finCombat == 0) {
+    printf("Que dois faire %s ?\n", nom);
+    printf("Attaquer [0], Defendre [1], Magie [2], Objets [3]\n");
+    scanf("%d", &choixAction);
+    MAX = 1, MIN = 0;
+    actionM = (rand() %(MAX - MIN + 1)) + MIN;
+          if (choixAction == 1) {
+            attaqueCombatM = attaqueCombatM/2;
+            printf("%s se defend.\n", nom);
           }
+          if (actionM == 1) {
+            attaqueCombat = attaqueCombat/2;
+            printf("%s se defend.\n\n", nomM);
+          }
+      switch (choixAction) {
+        case 0: printf("%s attaque.\n", nom);
+                printf("%s subit %d degats.\n", nomM, attaqueCombat);
+                pvM = pvM - attaqueCombat;
+        break;
+      }
+      switch (actionM) {
+        case 0: printf("%s attaque.\n", nomM);
+                printf("%s subit %d degats.\n", nom, attaqueCombatM);
+                pv = pv - attaqueCombatM;
+        break;
+      }
+      attaqueCombat = attaque;
+      attaqueCombatM = attaqueM;
+      printf("%s | %d \n", nom, pv);
+      printf("%s | %d \n", nomM, pvM);
+
+      if (pv <= 0) {
+        printf("%s tombe KO.\n", nom);
+        printf("GAME OVER.\n");
+        finCombat = 1;
+        return 0;
+      } else if (pvM <= 0) {
+        printf("%s n'a plus de pv.\n");
+        printf("Vous remportez %d points d'experience.\n", xpM);
+        xp = xp + xpM;
+        finCombat = 1;
+      }
+    }
+}
+
+void oneUp(char nom[20], int xp, int levelup, int niveau){
+    printf("%s Nv.%d %d / %d\n", nom, niveau, xp, levelup);
+  if (xp >= levelup) {
+    niveau++;
+    printf("Vous montez au niveau %d !\n", niveau);
+    levelup = levelup*1.5;
   }
 }
 //  Sleep(7000); system("cls"); Color (11,0);
@@ -93,16 +167,53 @@ while (sortie == 0) {
 // Main
 int main(int argc, char const *argv[]) {
 
+
 // variables
     int newGame;
     int position = 0;
     int choixDirection;
     int sortie = 0;
+    int finCombat = 0;
+    srand(time(NULL));
+
+
+    zone lieuActuel;
     zone grotteDepart = {"Grotte", 2, {"Fond de la grotte","Mi-Chemin","Sortie"}};
-    perso persoPrincipal;
 
+    perso persoPrincipal = {"", 40, 7,7, 0, 50, 1};
 
-    carte(grotteDepart.nom,grotteDepart.salleMax,grotteDepart.salle, position, choixDirection, sortie);
+    ennemis chauveSouris = {"Chauve-Souris", 20, 5, 5, 15, 1, 0};
+
+while (sortie == 0) {
+    printf("-------------- %s | %s ------------\n", grotteDepart.nom, grotteDepart.salle[position]);
+      if (position < grotteDepart.salleMax && position > 0) {
+          printf("Avancer [0], Reculer[1]\n");
+        } else if (position == 0) {
+          printf("Avancer [0]\n");
+        } else if (position == grotteDepart.salleMax){
+          printf("Reculer[1], Sortir[2]\n");
+        }
+      scanf("%d", &choixDirection);
+        while (choixDirection < 0 || choixDirection > 2) {
+          printf("Mere m'aurait dit: 'chaque chose en son temps, ma fille'.\n");
+          scanf("%d", &choixDirection);
+        }
+            if (choixDirection == 0) {
+              printf("Vous avancez.\n");
+              position++;
+            } else if (choixDirection == 1 && position > 0) {
+              printf("Vous reculez.\n");
+              position = position -1;
+            } else if (choixDirection == 2 && position == grotteDepart.salleMax) {
+              printf("Vous sortez de la zone.\n");
+              sortie = 1;
+            }
+            if (position == 1) {
+              combat1v1(persoPrincipal.pv, chauveSouris.pv, persoPrincipal.nom, chauveSouris.nom, persoPrincipal.choixAction, chauveSouris.actionM, chauveSouris.max, chauveSouris.min, finCombat, persoPrincipal.attaqueBase, chauveSouris.attaqueBase, persoPrincipal.attaqueCombat, chauveSouris.attaqueCombat, chauveSouris.expDonnee, persoPrincipal.exp);
+              oneUp(persoPrincipal.nom, persoPrincipal.exp, persoPrincipal.levelup, persoPrincipal.niveau);
+            }
+}
+
 
 // Ecran d'accueil
 Color (6,0);
@@ -116,9 +227,37 @@ system("cls");
 // Debut du jeu
   reveil(); nomPP(persoPrincipal.nom);
 Color (15,0);
-    while (position != grotteDepart.salleMax) {
-      carte(grotteDepart.nom,grotteDepart.salleMax,grotteDepart.salle[grotteDepart.salleMax], position, choixDirection, sortie);
-    }
+system("cls");
+
+// Déplacements et premier combat
+while (sortie == 0) {
+    printf("-------------- %s | %s ------------\n", grotteDepart.nom, grotteDepart.salle[position]);
+      if (position < grotteDepart.salleMax && position > 0) {
+          printf("Avancer [0], Reculer[1]\n");
+        } else if (position == 0) {
+          printf("Avancer [0]\n");
+        } else if (position == grotteDepart.salleMax){
+          printf("Reculer[1], Sortir[2]\n");
+        }
+      scanf("%d", &choixDirection);
+        while (choixDirection < 0 || choixDirection > 2) {
+          printf("Mere m'aurait dit: 'chaque chose en son temps, ma fille'.\n");
+          scanf("%d", &choixDirection);
+        }
+            if (choixDirection == 0) {
+              printf("Vous avancez.\n");
+              position++;
+            } else if (choixDirection == 1 && position > 0) {
+              printf("Vous reculez.\n");
+              position = position -1;
+            } else if (choixDirection == 2 && position == grotteDepart.salleMax) {
+              printf("Vous sortez de la zone.\n");
+              sortie = 1;
+            }
+            if (position == 1) {
+              combat1v1(persoPrincipal.pv, chauveSouris.pv, persoPrincipal.nom, chauveSouris.nom, persoPrincipal.choixAction, chauveSouris.actionM, chauveSouris.max, chauveSouris.min, finCombat, persoPrincipal.attaqueBase, chauveSouris.attaqueBase, persoPrincipal.attaqueCombat, chauveSouris.attaqueCombat, persoPrincipal.exp, chauveSouris.expDonnee);
+            }
+}
 
 
   return 0;
