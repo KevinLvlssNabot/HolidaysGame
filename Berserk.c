@@ -14,7 +14,9 @@ void Color(int t,int f)
 struct Capacites_t{
     char nom[20];
     int degats;
+    int defense;
     int haineNecessaire;
+    int volDeVie;
 };
 typedef struct Capacites_t capacites;
 
@@ -55,14 +57,15 @@ int main(int argc, char const *argv[]) {
 //variables
 int newGame;
 int finPartie = 0;
+int finCombat = 0;
 int etage = 1;
 int nbreEnnemis;
 int ennemisRdm; int ennemisRdm1; int ennemisRdm2;
 
-capacites trancher = {"Trancher", 10, 0};
-capacites defendre = {"Defendre", 5, 0};
+capacites trancher = {"Trancher", 10, 0, 0};
+capacites defendre = {"Defendre", 0, 5, 0};
 capacites attaquer = {"Attaquer", 5};
-capacites sucer = {"Sucer le sang", 7};
+capacites sucer = {"Sucer le sang", 7, 0, 0, 3};
 
 
 ennemis monstre1; ennemis monstre2; ennemis monstre3; ennemis monstre4; ennemis monstre5; ennemis monstre6;
@@ -114,7 +117,7 @@ Sleep (2000);
 Sleep (7000);
 system("cls");
 // Debut ascension
-Color(15,0)
+Color(15,0);
 while (finPartie == 0) {
    printf(" -----------------------------------\n\n");
    printf("|              ETAGE %d              |\n\n", etage);
@@ -131,6 +134,7 @@ Color (4,0);
           int MAX = 3, MIN = 1;
           nbreEnnemis = (rand() %(MAX - MIN + 1)) + MIN;
             if (nbreEnnemis == 1) {
+              pp.cible = 0;
               int MAXRDM = 1, MINRDM = 0;
                 ennemisRdm = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
                 if (ennemisRdm == 0) {
@@ -186,6 +190,145 @@ Color (4,0);
                               }
             }
       } // accolade fin etage < 10
+
+Color(15,0);    //Phase de combat
+                while (finCombat == 0) { // Choix action pp
+                  printf("\n");
+                  printf("Que dois faire %s?\n\n", pp.nom);
+                if (pp.niveau < 5) {
+                  printf("%s[0] | %s[1]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom);
+                }
+                    scanf("%d\n", pp.choixAction);
+                        if (pp.choixAction == 0 && nbreEnnemis == 2) {
+                          printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[0]->nom);
+                          printf("[0] pour %s | [1] pour %s\n", monstre1.nom, monstre2.nom);
+                          scanf("%d\n", pp.cible);
+                        } else if (pp.choixAction == 0 && nbreEnnemis == 3) {
+                          printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[0]->nom);
+                          printf("[0] pour %s | [1] pour %s | [2] pour %s\n", monstre1.nom, monstre2.nom, monstre3.nom);
+                          scanf("%d\n", pp.cible);
+                        }
+                        // Action ennemis
+                        if (nbreEnnemis == 1) {
+                            monstre1.actionM = (rand() %(monstre1.max - monstre1.min + 1)) + monstre1.min;
+                        } else if (nbreEnnemis == 2) {
+                            monstre1.actionM = (rand() %(monstre1.max - monstre1.min + 1)) + monstre1.min;
+                            monstre2.actionM = (rand() %(monstre2.max - monstre2.min + 1)) + monstre2.min;
+                        } else if (nbreEnnemis == 3) {
+                          monstre1.actionM = (rand() %(monstre1.max - monstre1.min + 1)) + monstre1.min;
+                          monstre2.actionM = (rand() %(monstre2.max - monstre2.min + 1)) + monstre2.min;
+                          monstre3.actionM = (rand() %(monstre3.max - monstre3.min + 1)) + monstre3.min;
+                        }
+
+                            // Repercussion action pp
+                              if (pp.choixAction == 0) {
+                                  printf("%s utilise %s.\n", pp.nom, pp.capacites_list[0]->nom);
+                              } else if (pp.choixAction == 1) {
+                                  printf("%s utilise %s.\n", pp.nom, pp.capacites_list[1]->nom);
+                                      if (nbreEnnemis == 1) {
+                                        monstre1.capacites_list->degats = monstre1.capacites_list->degats - pp.capacites_list[1]->defense;
+                                      } else if (nbreEnnemis == 2) {
+                                        monstre1.capacites_list->degats = monstre1.capacites_list->degats - pp.capacites_list[1]->defense;
+                                        monstre2.capacites_list->degats = monstre2.capacites_list->degats - pp.capacites_list[1]->defense;
+                                      } else if (nbreEnnemis == 3) {
+                                        monstre1.capacites_list->degats = monstre1.capacites_list->degats - pp.capacites_list[1]->defense;
+                                        monstre2.capacites_list->degats = monstre2.capacites_list->degats - pp.capacites_list[1]->defense;
+                                        monstre3.capacites_list->degats = monstre3.capacites_list->degats - pp.capacites_list[1]->defense;
+                                      }
+                              }
+          Color(4,0);                        // Repercussion action ennemis
+                                    if (monstre1.actionM == 0) {
+                                        printf("%s utilise %s.\n", monstre1.nom, monstre1.capacites_list[0]->nom);
+                                        pp.capacites_list->degats = pp.capacites_list->degats - monstre1.capacites_list[0]->defense;
+                                    } else if (monstre1.actionM == 1) {
+                                        printf("%s utilise %s.\n", monstre1.nom, monstre1.capacites_list[1]->nom);
+                                        pp.capacites_list->degats = pp.capacites_list->degats - monstre1.capacites_list[1]->defense;
+                                    }
+                                          if (monstre2.actionM == 0) {
+                                              printf("%s utilise %s.\n", monstre2.nom, monstre2.capacites_list[0]->nom);
+                                              pp.capacites_list->degats = pp.capacites_list->degats - monstre2.capacites_list[0]->defense;
+                                          } else if (monstre2.actionM == 1) {
+                                              printf("%s utilise %s.\n", monstre2.nom, monstre2.capacites_list[1]->nom);
+                                              pp.capacites_list->degats = pp.capacites_list->degats - monstre2.capacites_list[1]->defense;
+                                          }
+                                              if (monstre3.actionM == 0) {
+                                                  printf("%s utilise %s.\n", monstre2.nom, monstre2.capacites_list[0]->nom);
+                                                  pp.capacites_list->degats = pp.capacites_list->degats - monstre3.capacites_list[0]->defense;
+                                              } else if (monstre3.actionM == 1) {
+                                                  printf("%s utilise %s.\n", monstre2.nom, monstre2.capacites_list[1]->nom);
+                                                  pp.capacites_list->degats = pp.capacites_list->degats - monstre3.capacites_list[1]->defense;
+                                              }
+
+                                  // Calcul degats
+                                  if (pp.choixAction == 0) {
+                                      if (pp.cible == 0) {
+              Color (15,0);             printf("%s perd %d PV !\n", monstre1.nom, pp.capacites_list[0]->degats);
+                                        monstre1.pv = monstre1.pv - pp.capacites_list[0]->degats;
+                                      } else if (pp.cible == 1) {
+                                        printf("%s perd %d PV !\n", monstre2.nom, pp.capacites_list[0]->degats);
+                                        monstre2.pv = monstre2.pv - pp.capacites_list[0]->degats;
+                                      } else if (pp.cible == 2) {
+                                        printf("%s perd %d PV !\n", monstre3.nom, pp.capacites_list[0]->degats);
+                                        monstre3.pv = monstre3.pv - pp.capacites_list[0]->degats;
+                                      }
+                                  }
+                                          if (monstre1.actionM == 0) {
+                                                if (monstre1.capacites_list[0]->degats > 0) {
+                                                  printf("%s perd %d PV !\n", pp.nom, monstre1.capacites_list[0]->degats);
+                                                  pp.pv = pp.pv - monstre1.capacites_list[0]->degats;
+                                                } else if (monstre1.capacites_list[0]->defense > 0) {
+                                                  printf("%s se defend.\n", monstre1.nom);
+                                                }
+                                          } else if (monstre1.actionM == 1) {
+                                            if (monstre1.capacites_list[1]->degats > 0) {
+                                              printf("%s perd %d PV !\n", pp.nom, monstre1.capacites_list[1]->degats);
+                                              pp.pv = pp.pv - monstre1.capacites_list[1]->degats;
+                                            } else if (monstre1.capacites_list[1]->defense > 0) {
+                                              printf("%s se defend.\n", monstre1.nom);
+                                            }
+                                          }
+                                                    if (monstre2.actionM == 0) {
+                                                          if (monstre2.capacites_list[0]->degats > 0) {
+                                                            printf("%s perd %d PV !\n", pp.nom, monstre2.capacites_list[0]->degats);
+                                                            pp.pv = pp.pv - monstre2.capacites_list[0]->degats;
+                                                          } else if (monstre2.capacites_list[0]->defense > 0) {
+                                                            printf("%s se defend.\n", monstre2.nom);
+                                                          }
+                                                    } else if (monstre2.actionM == 1) {
+                                                      if (monstre2.capacites_list[1]->degats > 0) {
+                                                        printf("%s perd %d PV !\n", pp.nom, monstre2.capacites_list[1]->degats);
+                                                        pp.pv = pp.pv - monstre2.capacites_list[1]->degats;
+                                                      } else if (monstre2.capacites_list[1]->defense > 0) {
+                                                        printf("%s se defend.\n", monstre2.nom);
+                                                      }
+                                                    }
+
+                                                            if (monstre3.actionM == 0) {
+                                                                  if (monstre3.capacites_list[0]->degats > 0) {
+                                                                    printf("%s perd %d PV !\n", pp.nom, monstre3.capacites_list[0]->degats);
+                                                                    pp.pv = pp.pv - monstre3.capacites_list[0]->degats;
+                                                                  } else if (monstre3.capacites_list[0]->defense > 0) {
+                                                                    printf("%s se defend.\n", monstre3.nom);
+                                                                  }
+                                                            } else if (monstre3.actionM == 1) {
+                                                              if (monstre3.capacites_list[1]->degats > 0) {
+                                                                printf("%s perd %d PV !\n", pp.nom, monstre3.capacites_list[1]->degats);
+                                                                pp.pv = pp.pv - monstre3.capacites_list[1]->degats;
+                                                              } else if (monstre3.capacites_list[1]->defense > 0) {
+                                                                printf("%s se defend.\n", monstre3.nom);
+                                                              }
+                                                            }
+
+                                        // Condition de victoire/défaite
+                                        if (pp.pv <= 0) {
+                                          printf("Les demons ont eu raison de vous. La vengeance attendra.\n");
+                                          printf("GAME OVER\n");
+                                          finCombat = 1;
+                                        }
+                                            
+
+                } // Accolade fin combat
+
 
  }
 
