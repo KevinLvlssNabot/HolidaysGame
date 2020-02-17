@@ -105,7 +105,7 @@ void nomPP(char nomJoueur[20]){
 //          }
 //}
 
-int combat1v1(int pv, int pvM, char nom[20], char nomM[20], int choixAction, int actionM, int MAX, int MIN, int finCombat, int attaque, int attaqueM, int attaqueCombat, int attaqueCombatM, int xpM, int xp){
+int combat1v1(int pv, int pvM, char nom[20], char nomM[20], int choixAction, int actionM, int MAX, int MIN, int finCombat, int attaque, int attaqueM, int attaqueCombat, int attaqueCombatM){
     printf("%s apparait.\n", nomM);
   while (finCombat == 0) {
     printf("Que dois faire %s ?\n", nom);
@@ -141,25 +141,32 @@ int combat1v1(int pv, int pvM, char nom[20], char nomM[20], int choixAction, int
       if (pv <= 0) {
         printf("%s tombe KO.\n", nom);
         printf("GAME OVER.\n");
-        finCombat = 1;
         return 0;
       } else if (pvM <= 0) {
         printf("%s n'a plus de pv.\n");
-        printf("Vous remportez %d points d'experience.\n", xpM);
-        xp = xp + xpM;
         finCombat = 1;
+        return pv;
       }
     }
 }
 
-void oneUp(char nom[20], int xp, int levelup, int niveau){
+int expWin(char nom[20], int xp, int levelup, int niveau, int xpM){
+      printf("Vous remportez %d points d'experience.\n", xpM);
+      xp = xp + xpM;
     printf("%s Nv.%d %d / %d\n", nom, niveau, xp, levelup);
+    return xp;
+}
+
+int oneUp(char nom[20], int xp, int levelup, int niveau){
   if (xp >= levelup) {
     niveau++;
-    printf("Vous montez au niveau %d !\n", niveau);
-    levelup = levelup*1.5;
+    printf("%s monte au niveau %d !\n", nom, niveau);
+    levelup = levelup*2.5;
   }
+    return levelup;
 }
+
+
 //  Sleep(7000); system("cls"); Color (11,0);
 //  printf("La bas ! Il y a quelqu'un au fond de cette impasse ! Vite amenez-vous !\nEh! Eh! Vous m'entendez ? Reveillez-vous !\nAIDEZ-MOI A LA PORTER, BANDE DE FAINEANTS !\n");
 
@@ -176,11 +183,10 @@ int main(int argc, char const *argv[]) {
     int finCombat = 0;
     srand(time(NULL));
 
-
     zone lieuActuel;
     zone grotteDepart = {"Grotte", 2, {"Fond de la grotte","Mi-Chemin","Sortie"}};
 
-    perso persoPrincipal = {"", 40, 7,7, 0, 50, 1};
+    perso persoPrincipal = {"", 100, 7,7, 0, 50, 1};
 
     ennemis chauveSouris = {"Chauve-Souris", 20, 5, 5, 15, 1, 0};
 
@@ -209,9 +215,14 @@ while (sortie == 0) {
               sortie = 1;
             }
             if (position == 1) {
-              combat1v1(persoPrincipal.pv, chauveSouris.pv, persoPrincipal.nom, chauveSouris.nom, persoPrincipal.choixAction, chauveSouris.actionM, chauveSouris.max, chauveSouris.min, finCombat, persoPrincipal.attaqueBase, chauveSouris.attaqueBase, persoPrincipal.attaqueCombat, chauveSouris.attaqueCombat, chauveSouris.expDonnee, persoPrincipal.exp);
-              oneUp(persoPrincipal.nom, persoPrincipal.exp, persoPrincipal.levelup, persoPrincipal.niveau);
+              persoPrincipal.pv = combat1v1(persoPrincipal.pv, chauveSouris.pv, persoPrincipal.nom, chauveSouris.nom, persoPrincipal.choixAction, chauveSouris.actionM, chauveSouris.max, chauveSouris.min, finCombat, persoPrincipal.attaqueBase, chauveSouris.attaqueBase, persoPrincipal.attaqueCombat, chauveSouris.attaqueCombat);
+                if (persoPrincipal.pv > 0) {
+              persoPrincipal.exp = expWin(persoPrincipal.nom, persoPrincipal.exp, persoPrincipal.levelup, persoPrincipal.niveau, chauveSouris.expDonnee);
+              persoPrincipal.levelup = oneUp(persoPrincipal.nom, persoPrincipal.exp, persoPrincipal.levelup, persoPrincipal.niveau);
+            } else {
+                return 0;
             }
+        }
 }
 
 
@@ -255,7 +266,7 @@ while (sortie == 0) {
               sortie = 1;
             }
             if (position == 1) {
-              combat1v1(persoPrincipal.pv, chauveSouris.pv, persoPrincipal.nom, chauveSouris.nom, persoPrincipal.choixAction, chauveSouris.actionM, chauveSouris.max, chauveSouris.min, finCombat, persoPrincipal.attaqueBase, chauveSouris.attaqueBase, persoPrincipal.attaqueCombat, chauveSouris.attaqueCombat, persoPrincipal.exp, chauveSouris.expDonnee);
+              combat1v1(persoPrincipal.pv, chauveSouris.pv, persoPrincipal.nom, chauveSouris.nom, persoPrincipal.choixAction, chauveSouris.actionM, chauveSouris.max, chauveSouris.min, finCombat, persoPrincipal.attaqueBase, chauveSouris.attaqueBase, persoPrincipal.attaqueCombat, chauveSouris.attaqueCombat);
             }
 }
 
