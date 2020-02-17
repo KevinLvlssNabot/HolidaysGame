@@ -57,6 +57,7 @@ int newGame;
 int finPartie = 0;
 int etage = 1;
 int nbreEnnemis;
+int ennemisRdm; int ennemisRdm1; int ennemisRdm2;
 
 capacites trancher = {"Trancher", 10, 0};
 capacites defendre = {"Defendre", 5, 0};
@@ -82,7 +83,7 @@ sangsueG.capacites_list = malloc(5* sizeof(capacites*));
 sangsueG.capacites_list[0]= &attaquer;
 sangsueG.capacites_list[1]= &sucer;
 
-printf("%s %d %d\n", sangsueG.capacites_list[1]->nom, sangsueG.capacites_list[1]->degats, sangsueG.capacites_list[1]->haineNecessaire);
+
 Color(6,0);
 // Ecran titre
     printf(" -----------------------------------\n\n");
@@ -105,29 +106,86 @@ system("cls");
   printf("Entrez le nom de votre heros.\n");
   scanf("%s", pp.nom);
 system("cls");
-  printf("Bienvenue %s\n", pp.nom);
+  printf("Bienvenue %s.\n", pp.nom);
 Sleep (2000);
-  printf("Vous vous appretez a vivre une epreuve difficile, voire insurmontable.\nPlongez dans les tenebres d'un sabbat sanguinaire, serez-vous assez fort et intelligent pour en sortir indemne et obtenir votre vengeance ?");
+  printf("Vous vous appretez a vivre une epreuve difficile, voire insurmontable.\nPlongez dans les tenebres d'un sabbat sanguinaire, serez-vous assez fort et intelligent pour en sortir indemne et obtenir votre vengeance ?\n");
   printf("Seul l'avenir nous le dira. Je vous souhaiterez bien bonne chance, mais dans ce monde, la chance n'a pas sa place.\n");
 
- while (finPartie == 0) {
+Sleep (7000);
+system("cls");
+// Debut ascension
+Color(15,0)
+while (finPartie == 0) {
    printf(" -----------------------------------\n\n");
    printf("|              ETAGE %d              |\n\n", etage);
    printf(" -----------------------------------\n\n");
   if (pp.niveau < 5) {
-      printf("%s | %d | %d / %d\n", pp.nom, pp.niveau, pp.exp, pp.levelup);
+      printf("%s | Lvl: %d | Exp : %d / %d\n", pp.nom, pp.niveau, pp.exp, pp.levelup);
   } else {
     printf("%s | Lvl : %d | Exp : %d / %d | Haine : %d\n", pp.nom, pp.niveau, pp.exp, pp.levelup, pp.haine);
   }
 Sleep (2000);
+Color (4,0);
       if (etage < 10) {
             srand(time(NULL));
           int MAX = 3, MIN = 1;
           nbreEnnemis = (rand() %(MAX - MIN + 1)) + MIN;
             if (nbreEnnemis == 1) {
-                monstre1 = sangsueG;
+              int MAXRDM = 1, MINRDM = 0;
+                ennemisRdm = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                if (ennemisRdm == 0) {
+                    monstre1 = sangsueG;
+                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                } else if (ennemisRdm == 1) {
+                    monstre1 = engeanceM;
+                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                }
+            } else if (nbreEnnemis == 2) {
+               int MAXRDM = 1, MINRDM = 0;
+                ennemisRdm = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                ennemisRdm1 = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                if (ennemisRdm == 0) {
+                    monstre1 = sangsueG;
+                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                } else if (ennemisRdm == 1) {
+                    monstre1 = engeanceM;
+                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                }
+                    if (ennemisRdm1 == 0) {
+                        monstre2 = sangsueG;
+                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                    } else if (ennemisRdm2 == 1) {
+                        monstre2 = engeanceM;
+                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                    }
+            } else if (nbreEnnemis == 3) {
+                     int MAXRDM = 1, MINRDM = 0;
+                      ennemisRdm = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                      ennemisRdm1 = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                      ennemisRdm2 = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                      if (ennemisRdm == 0) {
+                          monstre1 = sangsueG;
+                          printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                      } else if (ennemisRdm == 1) {
+                          monstre1 = engeanceM;
+                          printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                      }
+                          if (ennemisRdm1 == 0) {
+                              monstre2 = sangsueG;
+                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                          } else if (ennemisRdm2 == 1) {
+                              monstre2 = engeanceM;
+                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                          }
+                              if (ennemisRdm2 == 0) {
+                                monstre3 = sangsueG;
+                                printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                              } else if (ennemisRdm2 == 1) {
+                                monstre3 = engeanceM;
+                                printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                              }
             }
-      }
+      } // accolade fin etage < 10
 
  }
 
