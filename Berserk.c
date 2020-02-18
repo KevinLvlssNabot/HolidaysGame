@@ -348,6 +348,65 @@ Color(15,0);      printf("\n");
                                                               }
                                                             }
 
+                                    //Vérificatio vol de vie pp
+                                      if (pp.choixAction == 0 && pp.capacites_list[0]->volDeVie > 0) {
+                                          pp.pv = pp.pv + pp.capacites_list[0]->volDeVie;
+                                            if (pp.pv > pp.pvMax) {
+                                                pp.pv = pp.pvMax;
+                                            }
+                                          printf("%s recupere %d PV !\n", pp.nom, pp.capacites_list[0]->volDeVie);
+                                      } else if (pp.choixAction == 1 && pp.capacites_list[1]->volDeVie > 0) {
+                                        pp.pv = pp.pv + pp.capacites_list[1]->volDeVie;
+                                          printf("%s recupere %d PV !\n", pp.nom, pp.capacites_list[0]->volDeVie);
+                                            if (pp.pv > pp.pvMax) {
+                                                pp.pv = pp.pvMax;
+                                            }
+                                      }
+
+                                              //Verif vol de vie ennemis
+                                                if (monstre1.actionM == 0 && monstre1.capacites_list[0]->volDeVie > 0) {
+                                                  monstre1.pv = monstre1.pv + monstre1.capacites_list[0]->volDeVie;
+                                                      if (monstre1.pv > monstre1.pvMax) {
+                                                          monstre1.pv = monstre1.pvMax;
+                                                      }
+                                                  printf("%s recupere %d PV !\n", monstre1.nom, monstre1.capacites_list[0]->volDeVie);
+                                                } else if (monstre1.actionM == 1 && monstre1.capacites_list[1]->volDeVie > 0) {
+                                                      monstre1.pv = monstre1.pv + monstre1.capacites_list[1]->volDeVie;
+                                                          if (monstre1.pv > monstre1.pvMax) {
+                                                              monstre1.pv = monstre1.pvMax;
+                                                          }
+                                                      printf("%s recupere %d PV !\n", monstre1.nom, monstre1.capacites_list[1]->volDeVie);
+                                                }
+
+                                                      if (monstre2.actionM == 0 && monstre2.capacites_list[0]->volDeVie > 0) {
+                                                        monstre2.pv = monstre2.pv + monstre2.capacites_list[0]->volDeVie;
+                                                            if (monstre2.pv > monstre2.pvMax) {
+                                                                monstre2.pv = monstre2.pvMax;
+                                                            }
+                                                        printf("%s recupere %d PV !\n", monstre2.nom, monstre2.capacites_list[0]->volDeVie);
+                                                      } else if (monstre2.actionM == 1 && monstre2.capacites_list[1]->volDeVie > 0) {
+                                                            monstre2.pv = monstre2.pv + monstre2.capacites_list[1]->volDeVie;
+                                                                if (monstre2.pv > monstre2.pvMax) {
+                                                                    monstre2.pv = monstre2.pvMax;
+                                                                }
+                                                            printf("%s recupere %d PV !\n", monstre2.nom, monstre2.capacites_list[1]->volDeVie);
+                                                      }
+
+
+                                                            if (monstre3.actionM == 0 && monstre3.capacites_list[0]->volDeVie > 0) {
+                                                              monstre3.pv = monstre3.pv + monstre3.capacites_list[0]->volDeVie;
+                                                                  if (monstre3.pv > monstre3.pvMax) {
+                                                                      monstre3.pv = monstre3.pvMax;
+                                                                  }
+                                                              printf("%s recupere %d PV !\n", monstre3.nom, monstre3.capacites_list[0]->volDeVie);
+                                                            } else if (monstre3.actionM == 1 && monstre3.capacites_list[1]->volDeVie > 0) {
+                                                                  monstre3.pv = monstre3.pv + monstre3.capacites_list[1]->volDeVie;
+                                                                      if (monstre3.pv > monstre3.pvMax) {
+                                                                          monstre3.pv = monstre3.pvMax;
+                                                                      }
+                                                                  printf("%s recupere %d PV !\n", monstre3.nom, monstre3.capacites_list[1]->volDeVie);
+                                                            }
+
                                         // Condition de victoire/défaite
 Color (15,0);                        if (pp.pv <= 0) {
                                           printf("Les demons ont eu raison de vous. La vengeance attendra.\n");
@@ -383,11 +442,11 @@ Color (15,0);                        if (pp.pv <= 0) {
                                     pp.niveau++;
                                     printf("Vous passez au niveau %d !\n", pp.niveau);
                                     pp.levelup = pp.levelup*2.5;
-                                    pp.capacites_list[0]->degats = pp.capacites_list[0]->degats*1.5;
+                                    pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase*1.5;
                                     printf("Vos attaques et votre defense deviennent plus efficaces.\n");
                                     pp.capacites_list[1]->defense = pp.capacites_list[1]->defense*1.5;
                                     pp.exp = pp.levelup - pp.exp;
-                                  }
+                                  } printf("%d\n", pp.capacites_list[0]->degatsBase);
 
           //Remise stat à leur base
             pp.capacites_list[0]->degats = pp.capacites_list[0]->degatsBase;
