@@ -37,12 +37,17 @@ struct Perso_t{
 };
 typedef struct Perso_t perso;
 
-struct Zone_t{
+struct Items_t{
   char nom[30];
-  int salleMax;
-  char salle[100][30];
+  int quantiteJoueur;
+  int index;
 };
-typedef struct Zone_t zone;
+typedef struct Items_t items;
+
+struct Besace_t{
+  items **items_list;
+};
+typedef struct Besace_t besace;
 
 struct Ennemis_t{
   char nom[20];
@@ -69,6 +74,9 @@ int choixDirection;
 int nbreEnnemis;
 int ennemisRdm; int ennemisRdm1; int ennemisRdm2;
 int MAXRDM; int MINRDM;
+int objetRdm;
+int maxObj = 100 ; int minObj = 0;
+int choixObjet; int objetTotal = 0;
 
 capacites trancher = {"Trancher", 15, 15, 0, 0};
 capacites defendre = {"Defendre", 0, 0, 5, 0};
@@ -83,17 +91,30 @@ capacites frappe = {"Frappe", 15, 15, 0, 0};
 capacites soin = {"Soin"};
 
 ennemis monstre1; ennemis monstre2; ennemis monstre3; ennemis monstre4; ennemis monstre5; ennemis monstre6;
-ennemis engeanceM = {"Engeance-Mineure", 20, 20, 15, 1, 0,NULL, 0, 1};
-ennemis sangsueG = {"Sangsue", 15, 15, 10, 1, 0,NULL, 0, 2};
+ennemis engeanceM = {"Engeance-Mineure", 20, 20, 15, 1, 0, NULL, 0, 1};
+ennemis sangsueG = {"Sangsue", 15, 15, 10, 1, 0, NULL, 0, 2};
 ennemis apotre1 = {"Apotroph", 60, 60, 30, 2, 0, NULL, 0, 3};
 ennemis chien = {"Chien Possede", 25, 25, 15, 1, 0, NULL, 0, 4};
 ennemis apotre2 = {"L'invocant", 70, 70, 40, 1, 0, NULL, 0, 5};
 ennemis invocation = {"Invocation", 10, 10, 0, 0, 0, NULL, 0, 6};
 perso pp = {"", 1135, 1135, 0, 50, 1, NULL, 0, 0};
 
+items poudrelfe = {"Poudre d'Elfe", 0, 1};
+items souvenir = {"Souvenir", 0, 2};
+items aiguisage = {"Pierre d'Aiguisage", 0, 3};
+items renfort = {"Renfort", 0, 4};
+items flasque = {"Flasque", 0, 5};
+
+besace besace = {NULL};
+besace.items_list = malloc(10* sizeof(capacites*));
+besace.items_list[0] = &poudrelfe;
+besace.items_list[1] = &souvenir;
+besace.items_list[2] = &aiguisage;
+besace.items_list[3] = &renfort;
+besace.items_list[4] = &flasque;
 
 // Liste des capacites pp
-pp.capacites_list = malloc(20* sizeof(capacites*));
+pp.capacites_list = malloc(10* sizeof(capacites*));
 pp.capacites_list[0]= &trancher;
 pp.capacites_list[1]= &defendre;
 pp.capacites_list[2]= &coudepoing;
@@ -886,6 +907,94 @@ Color (15,0);                        if (pp.pv <= 0) {
                       if (nbreEnnemis >= 3) {
                         monstre3.pv = monstre3.pvMax;
                       }
+
+
+              // Chance de trouver un objet
+                if (etage > 21) {
+                  srand(time(NULL));
+                  objetRdm = (rand() %(maxObj - minObj + 1)) + minObj;
+                    if (objetRdm <= 10) {
+  Color(15,0);          printf("Vous trouvez de la %s ! Utilisez la pour vous soigner avant de poursuivre votre ascension.\n", poudrelfe.nom);
+                        poudrelfe.quantiteJoueur++;
+                        objetTotal++;
+                    } else if (objetRdm >= 11 && objetRdm <= 20) {
+                        printf("Vous trouvez un %s de vos compagnons. Utilisez le pour augmenter votre rage avant un combat.\n", souvenir.nom);
+                        souvenir.quantiteJoueur++;
+                        objetTotal++;
+                    } else if (objetRdm >= 21 && objetRdm <= 30) {
+                        printf("Vous trouvez une %s ! Utilisez la pour augmenter les degats de vos attaques.\n", aiguisage.nom);
+                        aiguisage.quantiteJoueur++;
+                        objetTotal++;
+                    } else if (objetRdm >= 31 && objetRdm <= 40) {
+                        printf("Vous trouvez un %s ! Utilisez le pour renforcer vos competences defensives.\n", renfort.nom);
+                        renfort.quantiteJoueur++;
+                        objetTotal++;
+                    } else if (objetRdm >= 41 && objetRdm <= 50) {
+                        printf("Vous trouvez une %s d'alcool. De quoi oublier cet enfer et ameliorer vos points de vie maximum.\n", flasque.nom);
+                        flasque.quantiteJoueur++;
+                        objetTotal++;
+                    }
+                }
+
+                //Demande utilisation objet
+                    if (objetTotal > 0) {
+                      printf("Souhaitez-vous utiliser un objet ? [0]Oui [1]Non\n");
+                      scanf("%d", &choixDirection);
+                        if (choixDirection == 0) {
+                          printf("Quel objet voulez-vous utiliser ?\n");
+                            if (poudrelfe.quantiteJoueur > 0) {
+                                printf("[0]%s\n", poudrelfe.nom);
+                                printf("%s | Quantite : %d |\n", poudrelfe.nom, poudrelfe.quantiteJoueur);
+                            }
+                            if (souvenir.quantiteJoueur > 0) {
+                                printf("[1]%s\n", souvenir.nom);
+                                printf("%s | Quantite : %d |\n", souvenir.nom, souvenir.quantiteJoueur);
+                            }
+                            if (aiguisage.quantiteJoueur > 0) {
+                                printf("[2]%s\n", aiguisage.nom);
+                                printf("%s | Quantite : %d |\n", aiguisage.nom, aiguisage.quantiteJoueur);
+                            }
+                            if (renfort.quantiteJoueur > 0) {
+                                printf("[3]%s\n", renfort.nom);
+                                printf("%s | Quantite : %d |\n", renfort.nom, renfort.quantiteJoueur);
+                            }
+                            if (flasque.quantiteJoueur > 0) {
+                                printf("[4]%s\n", flasque.nom);
+                                printf("%s | Quantite : %d |\n", flasque.nom, flasque.quantiteJoueur);
+                            }
+                              scanf("%d", &choixObjet);
+                                if (choixObjet == 0) {
+                                    printf("Vous appliquez de la %s sur vos blessures et recuperez des PV !\n", poudrelfe.nom);
+                                    pp.pv = pp.pv + (0.33*pp.pvMax);
+                                    poudrelfe.quantiteJoueur = poudrelfe.quantiteJoueur -1;
+                                    objetTotal = objetTotal -1;
+                                } else if (choixObjet == 1) {
+                                    printf("Vous detruisez ce %s douloureux, votre haine augmente !\n", souvenir.nom);
+                                    pp.haine = pp.haine + 10;
+                                    souvenir.quantiteJoueur = souvenir.quantiteJoueur -1;
+                                    objetTotal = objetTotal -1;
+                                } else if (choixObjet = 2) {
+                                    printf("Vous aiguisez votre lame, vos degats augmentent !\n");
+                                    pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase + (0.2*pp.capacites_list[0]->degatsBase);
+                                    pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase + (0.2*pp.capacites_list[2]->degatsBase);
+                                    aiguisage.quantiteJoueur = aiguisage.quantiteJoueur -1;
+                                    objetTotal = objetTotal -1;
+                                } else if (choixObjet == 3) {
+                                    printf("Vous renforcez votre armure, vos competences defensives sont ameliorees.\n");
+                                    pp.capacites_list[1]->defense = pp.capacites_list[1]->defense +(0.3*pp.capacites_list[1]->defense);
+                                    renfort.quantiteJoueur = renfort.quantiteJoueur -1;
+                                    objetTotal = objetTotal -1;
+                                } else if (choixObjet == 4) {
+                                    printf("Vous consommez une %s, vos points de vie maximum augmentent.\n", flasque.nom);
+                                    pp.pvMax = pp.pvMax + 10;
+                                    flasque.quantiteJoueur = flasque.quantiteJoueur -1;
+                                    objetTotal = objetTotal -1;
+                                }
+                        } else if (choixDirection == 1) {
+                            printf("Vous preferez ne pas utiliser d'objets et continuez votre quete.\n");
+                        }
+                    }
+
 Sleep(5000);
 system("cls");
  }
