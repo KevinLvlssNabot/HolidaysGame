@@ -64,13 +64,13 @@ int main(int argc, char const *argv[]) {
 int newGame;
 int finPartie = 0;
 int finCombat = 0;
-int etage = 12;
+int etage = 21;
 int choixDirection;
 int nbreEnnemis;
 int ennemisRdm; int ennemisRdm1; int ennemisRdm2;
 int MAXRDM; int MINRDM;
 
-capacites trancher = {"Trancher", 20, 20, 0, 0};
+capacites trancher = {"Trancher", 15, 15, 0, 0};
 capacites defendre = {"Defendre", 0, 0, 5, 0};
 capacites attaquer = {"Attaquer", 5, 5};
 capacites sucer = {"Sucer le sang", 3, 3, 0, 0, 3};
@@ -78,13 +78,18 @@ capacites counter = {"Contre-Attaque"};
 capacites morsure = {"Morsure", 10, 10, 0, 0};
 capacites aboiement = {"Aboiement"};
 capacites coudepoing = {"Coup de Poing", 3, 3, 0, 10};
+capacites appel = {"Appel de l'ombre", 0, 0, 0, 0};
+capacites frappe = {"Frappe", 15, 15, 0, 0};
+capacites soin = {"Soin"};
 
 ennemis monstre1; ennemis monstre2; ennemis monstre3; ennemis monstre4; ennemis monstre5; ennemis monstre6;
 ennemis engeanceM = {"Engeance-Mineure", 20, 20, 15, 1, 0,NULL, 0, 1};
 ennemis sangsueG = {"Sangsue", 15, 15, 10, 1, 0,NULL, 0, 2};
 ennemis apotre1 = {"Apotroph", 60, 60, 30, 2, 0, NULL, 0, 3};
-ennemis chien ={"Chien Possede", 25, 25, 15, 1, 0, NULL, 0, 4};
-perso pp = {"", 35, 35, 0, 50, 5, NULL, 0, 0};
+ennemis chien = {"Chien Possede", 25, 25, 15, 1, 0, NULL, 0, 4};
+ennemis apotre2 = {"L'invocant", 70, 70, 40, 1, 0, NULL, 0, 5};
+ennemis invocation = {"Invocation", 10, 10, 0, 0, 0, NULL, 0, 6};
+perso pp = {"", 1135, 1135, 0, 50, 1, NULL, 0, 0};
 
 
 // Liste des capacites pp
@@ -107,6 +112,11 @@ apotre1.capacites_list[2]= &counter;
 chien.capacites_list = malloc(5* sizeof(capacites*));
 chien.capacites_list[0]= &morsure;
 chien.capacites_list[1]= &aboiement;
+apotre2.capacites_list = malloc(5* sizeof(capacites*));
+apotre2.capacites_list[0]= &frappe;
+apotre2.capacites_list[1]= &appel;
+invocation.capacites_list = malloc(2* sizeof(capacites*));
+invocation.capacites_list[0]= &soin;
 
 int repos = pp.pvMax*0.5;
 
@@ -144,40 +154,37 @@ Color(15,0);
 while (finPartie == 0) {
 
   // Gestion haine
-    if (pp.haine >= 10) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *1.10;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *1.10;
-    } else if (pp.haine >= 20) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *1.20;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *1.20;
-    } else if (pp.haine >= 30) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *1.30;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *1.30;
-    } else if (pp.haine >= 40) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *1.40;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *1.40;
-    } else if (pp.haine >= 50) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *1.50;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *1.50;
-    } else if (pp.haine >= 60) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *1.60;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *1.60;
-    } else if (pp.haine >= 70) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *1.70;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *1.70;
-    } else if (pp.haine >= 80) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *1.80;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *1.80;
-    } else if (pp.haine >= 90) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *1.90;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *1.90;
+    if (pp.haine >= 10 && pp.haine < 20) {
+        pp.capacites_list[0]->degatsBase = 15 *1.10;
+        pp.capacites_list[2]->degatsBase = 3 *1.10;
+    } else if (pp.haine >= 20 && pp.haine < 30) {
+        pp.capacites_list[0]->degatsBase = 15 *1.20;
+        pp.capacites_list[2]->degatsBase = 3 *1.20;
+    } else if (pp.haine >= 30 && pp.haine < 40) {
+        pp.capacites_list[0]->degatsBase = 15 *1.30;
+        pp.capacites_list[2]->degatsBase = 3 *1.30;
+    } else if (pp.haine >= 40 && pp.haine < 50) {
+        pp.capacites_list[0]->degatsBase = 15 *1.40;
+        pp.capacites_list[2]->degatsBase = 3 *1.40;
+    } else if (pp.haine >= 50 && pp.haine < 60) {
+        pp.capacites_list[0]->degatsBase = 15 *1.50;
+        pp.capacites_list[2]->degatsBase = 3 *1.50;
+    } else if (pp.haine >= 60 && pp.haine < 70) {
+        pp.capacites_list[0]->degatsBase = 15 *1.60;
+        pp.capacites_list[2]->degatsBase = 3 *1.60;
+    } else if (pp.haine >= 70 && pp.haine < 80) {
+        pp.capacites_list[0]->degatsBase = 15 *1.70;
+        pp.capacites_list[2]->degatsBase = 3 *1.70;
+    } else if (pp.haine >= 80 && pp.haine < 90) {
+        pp.capacites_list[0]->degatsBase = 15 *1.80;
+        pp.capacites_list[2]->degatsBase = 3 *1.80;
+    } else if (pp.haine >= 90 && pp.haine < 100) {
+        pp.capacites_list[0]->degatsBase = 15 *1.90;
+        pp.capacites_list[2]->degatsBase = 3 *1.90;
     } else if (pp.haine == 100) {
-        pp.capacites_list[0]->degatsBase = pp.capacites_list[0]->degatsBase *2;
-        pp.capacites_list[2]->degatsBase = pp.capacites_list[2]->degatsBase *2;
+        pp.capacites_list[0]->degatsBase = 15 *2;
+        pp.capacites_list[2]->degatsBase = 3 *2;
     }
-
-
-
 
 
 
@@ -366,6 +373,45 @@ Color(4,0);             printf("Vous ressentez une presence, une aura plus forte
                                           }
                         }
                       } // accolade fin etage < 20
+                        else if (etage == 20) {
+                          finCombat = 1;
+Color(15,0);                printf("Un lieu de repit, en ces terres souillees. Profitez en pour vous reposer.\n\n");
+                            printf("Vous vous demandez, essoufle, la raison qui vous a pousse a revenir dans cet enfer ?\n");
+                            printf("Demandez plutot a tout vos compagnons, dont l'ame erre en ces lieux. Eux, qui n'ont pas eu la chance de s'en sortir, massacres par des creatures que les cauchemars ne pourraient creer.\n");
+                            printf("Demandez a celui, qui vous a offert en sacrifice pour son reve personnel, mais vous n'etes pas venu pour parler, n'est-ce pas ?\n");
+                              printf("Que souhaitez-vous faire ?\n\n");
+                              printf("Se reposer [0], Partir [1]\n");
+                              scanf("%d", &choixDirection);
+                                  if (choixDirection == 0) {
+                                      printf("Vous decidez de faire une pause, en ne fermant qu'un oeil, evidemment.\n");
+                                      printf("Vous recuperez %d PV !\n", repos);
+                                      pp.pv = pp.pv + repos;
+                                      pp.haine = 0;
+                                          if (pp.pv > pp.pvMax) {
+                                              pp.pv = pp.pvMax;
+                                          }
+                                      while (choixDirection != 1) {
+                                        printf("Que souhaitez-vous faire ?\n\n");
+                                        printf("Partir [1]\n");
+                                        scanf("%d", &choixDirection);
+                                          if (choixDirection == 1) {
+                                              printf("Vous vous enfoncez plus profondemment, au coeur des tenebres.\n");
+                                              etage++;
+                                              printf("En partant, vous tombez sur une besace, elle pourra contenir des objets, utile je l'espere.\n");
+                                          }
+                                      }
+                                  } else if (choixDirection == 1) {
+                                      printf("Vous vous enfoncez plus profondemment, au creux des tenebres.\n");
+                                      etage++;
+                                      printf("En partant, vous tombez sur une besace, elle pourra contenir des objets, utile je l'espere.\n");
+                                  }
+                        } // accolade fin etage 20
+                          else if (etage == 21) {
+Color(4,0);                    printf("Vous ressentez une presence, une aura plus forte.\n");
+                               nbreEnnemis = 1;
+                               monstre1 = apotre2;
+                               printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                          } // accolade fin etage 21
 
 
 Color(15,0);    //Phase de combat
@@ -498,11 +544,60 @@ Color(15,0);      printf("\n");
 
                       // Repercussion moves spe.
                       if (monstre1.actionM == 1){
-                        if (monstre1.index == 4){
+                        if (monstre1.index == 4){ // chien
                           printf("%s augmente ses degats.\n", monstre1.nom);
                           monstre1.capacites_list[0]->degatsBase = monstre1.capacites_list[0]->degatsBase*1.5;
+                        } else if (monstre1.index == 5) { // apotre2
+                          printf("%s invoque une creature !\n", monstre1.nom);
+                            if (nbreEnnemis == 1) {
+                              nbreEnnemis = 2;
+                              monstre2 = invocation;
+                            } else if (nbreEnnemis == 2){
+                              nbreEnnemis = 3;
+                              monstre3 = invocation;
+                            }
                         }
                       }
+                          // Soin invocation
+                      if (monstre2.actionM == 0) {
+                        if (monstre2.index == 6) {
+                          printf("%s soigne ses allies !\n", monstre2.nom);
+                            if (nbreEnnemis == 2) {
+                                if (monstre1.pv > 0){
+                              monstre1.pv = monstre1.pv + 8;
+                                    }
+                                if (monstre2.pv > 0){
+                              monstre2.pv = monstre2.pv + 8;
+                                    }
+                                if (monstre1.pv > monstre1.pvMax) {
+                                  monstre1.pv = monstre1.pvMax;
+                                }
+                                if (monstre2.pv > monstre2.pvMax) {
+                                  monstre2.pv = monstre2.pvMax;
+                                }
+                            } else if (nbreEnnemis == 3) {
+                                if (monstre1.pv > 0){
+                              monstre1.pv = monstre1.pv + 8;
+                                    }
+                                if (monstre2.pv > 0){
+                              monstre2.pv = monstre2.pv + 8;
+                                    }
+                                if (monstre3.pv > 0){
+                              monstre3.pv = monstre3.pv + 8;
+                                    }
+                                if (monstre1.pv > monstre1.pvMax) {
+                                  monstre1.pv = monstre1.pvMax;
+                                }
+                                if (monstre2.pv > monstre2.pvMax) {
+                                  monstre2.pv = monstre2.pvMax;
+                                }
+                                if (monstre3.pv > monstre3.pvMax) {
+                                  monstre3.pv = monstre3.pvMax;
+                                }
+                            }
+                        }
+                      }
+
                       if (monstre2.actionM == 1) {
                         if (monstre2.index == 4){
                           printf("%s augmente ses degats.\n", monstre1.nom);
@@ -515,6 +610,22 @@ Color(15,0);      printf("\n");
                           monstre3.capacites_list[0]->degatsBase = monstre2.capacites_list[0]->degatsBase*1.5;
                         }
                       }
+
+
+              // Specificite invocation
+                if (monstre2.index == 6) {
+                  if (monstre2.pv <= 0) {
+                      if (monstre3.pv > 0) {
+                        monstre2 = monstre3;
+                        nbreEnnemis = 2;
+                      }
+                  }
+                }
+                  if (monstre3.index == 6) {
+                    if (monstre3.pv <= 0) {
+                          nbreEnnemis = 2;
+                    }
+                  }
                                   // Calcul degats
                                   if (pp.choixAction == 0) {
                                       if (pp.cible == 0) {
