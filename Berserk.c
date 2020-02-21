@@ -32,6 +32,7 @@ struct Perso_t{
   capacites **capacites_list;
   int haine;
   int statut;
+  int index;
   int cible;
   int choixAction;
 };
@@ -69,7 +70,7 @@ int main(int argc, char const *argv[]) {
 int newGame;
 int finPartie = 0;
 int finCombat = 0;
-int etage = 21;
+int etage = 29;
 int choixDirection;
 int nbreEnnemis;
 int ennemisRdm; int ennemisRdm1; int ennemisRdm2; int ennemisRdm3;
@@ -77,6 +78,7 @@ int MAXRDM; int MINRDM;
 int objetRdm;
 int maxObj = 100 ; int minObj = 0;
 int choixObjet; int objetTotal = 0;
+int nbreAllie; int choixAllie; int allieRdm;
 
 capacites trancher = {"Trancher", 15, 15, 0, 0};
 capacites defendre = {"Defendre", 0, 0, 5, 0};
@@ -92,6 +94,7 @@ capacites soin = {"Soin"};
 capacites balayage = {"Balayage", 10, 10, 0, 20}; // capacites lvl9
 capacites lourde = {"Frappe Lourde", 30, 30, 0, 0};
 capacites protection = {"Protection", 0, 0, 15, 0};
+capacites lamelio = {"Lamelioration"};
 
 
 ennemis monstre1; ennemis monstre2; ennemis monstre3; ennemis monstre4; ennemis monstre5; ennemis monstre6;
@@ -104,6 +107,10 @@ ennemis invocation = {"Invocation", 10, 10, 0, 0, 0, NULL, 0, 6};
 ennemis protecteur = {"Protecteur", 70, 70, 35, 1, 0, NULL, 0, 7};
 ennemis destructeur = {"Destructeur", 50, 50, 35, 0, 0, NULL, 0, 8};
 perso pp = {"", 1135, 1135, 0, 50, 10, NULL, 0, 0};
+perso pipin ={"Pipin", 300, 300, 0, 0, 0, NULL, 0, 0, 1};
+perso casca ={"Casca", 150, 150, 0, 0, 0, NULL, 0, 0, 2};
+perso rickert ={"Rickert", 225, 225, 0, 0, 0, NULL, 0, 0, 3};
+perso allie;
 
 items poudrelfe = {"Poudre d'Elfe", 0, 1};
 items souvenir = {"Souvenir", 0, 2};
@@ -125,6 +132,15 @@ pp.capacites_list[0]= &trancher;
 pp.capacites_list[1]= &defendre;
 pp.capacites_list[2]= &coudepoing;
 pp.capacites_list[3]= &balayage;
+pipin.capacites_list = malloc(5* sizeof(capacites*));
+pipin.capacites_list[0]= &lourde;
+pipin.capacites_list[1]= &protection;
+casca.capacites_list = malloc(5* sizeof(capacites*));
+casca.capacites_list[0]= &attaquer;
+casca.capacites_list[1]= &soin;
+rickert.capacites_list = malloc(5* sizeof(capacites*));
+rickert.capacites_list[0]= &attaquer;
+rickert.capacites_list[1]= &lamelio;
 
 // Liste des capacites Ennemis
 engeanceM.capacites_list = malloc(5* sizeof(capacites*));
@@ -638,6 +654,69 @@ Color(4,0);                    printf("Vous ressentez une presence, une aura plu
                                                   }
                                     }
                             } // accolade fin etage < 30
+                              if (etage == 30) { // accolade 30
+                                finCombat = 1;
+      Color(15,0);                printf("Un lieu de repit, en ces terres souillees. Profitez en pour vous reposer.\n\n");
+                                  printf("Quelle est cette voix que vous entendez ? Une voix qui vous est familiere.\n");
+                                  printf("C'est un peu d'aide, qui du fond de cet enfer, vient vous pretez main forte.\n");
+                                  printf("Mais prenez garde, etant des engeances de ce monde, ils perdent des forces apres chaque combat et s'ils perissent de nouveau, ils disparaitront a tout jamais.\n");
+                                    printf("Que souhaitez-vous faire ?\n\n");
+                                    printf("Se reposer [0], Partir [1]\n");
+                                    scanf("%d", &choixDirection);
+                                        if (choixDirection == 0) {
+                                            printf("Vous decidez de faire une pause, en ne fermant qu'un oeil, evidemment.\n");
+                                            printf("Vous recuperez %d PV !\n", repos);
+                                            pp.pv = pp.pv + repos;
+                                            pp.haine = 0;
+                                                if (pp.pv > pp.pvMax) {
+                                                    pp.pv = pp.pvMax;
+                                                }
+                                            while (choixDirection != 1) {
+                                              printf("Que souhaitez-vous faire ?\n\n");
+                                              printf("Partir [1]\n");
+                                              scanf("%d", &choixDirection);
+                                            }
+                                                if (choixDirection == 1) {
+                                                  printf("Choississez l'allie qui vous accompagnera vers la fin de ce periple.\n");
+                                                  printf("[0]%s, le geant, fort et defensif, [1]%s, la soigneuse, [2]%s, le support-forgeron.\n", pipin.nom, casca.nom, rickert.nom);
+                                                  scanf("%d", &choixAllie);
+                                                  if (choixAllie == 0) {
+                                                      nbreAllie = 1;
+                                                      printf("Vous avez chosit %s, bon courage a vous.\n", pipin.nom);
+                                                      allie = pipin;
+                                                  } else if (choixAllie == 1) {
+                                                    nbreAllie = 1;
+                                                    printf("Vous avez chosit %s, bonnes retrouvailles.\n", casca.nom);
+                                                    allie = casca;
+                                                  } else if (choixAllie == 2) {
+                                                    nbreAllie = 1;
+                                                    printf("Vous avez chosit %s, votre epee ne peut que s'en rejouir.\n", rickert.nom);
+                                                    allie = rickert;
+                                                  }
+                                                    printf("Vous vous enfoncez plus profondemment, au coeur des tenebres.\n");
+                                                    etage++;
+                                                  }
+                                        } else if (choixDirection == 1) {
+                                            printf("Choississez l'allie qui vous accompagnera vers la fin de ce periple.\n");
+                                            printf("[0]%s, le geant, fort et defensif, [1]%s, la soigneuse, [2]%s, le support-forgeron.\n", pipin.nom, casca.nom, rickert.nom);
+                                            scanf("%d", &choixAllie);
+                                              if (choixAllie == 0) {
+                                                  nbreAllie = 1;
+                                                  printf("Vous avez chosit %s, bon courage a vous.\n", pipin.nom);
+                                                  allie = pipin;
+                                              } else if (choixAllie == 1) {
+                                                nbreAllie = 1;
+                                                printf("Vous avez chosit %s, bonnes retrouvailles.\n", casca.nom);
+                                                allie = casca;
+                                              } else if (choixAllie == 2) {
+                                                nbreAllie = 1;
+                                                printf("Vous avez chosit %s, votre epee ne peut que s'en rejouir.\n", rickert.nom);
+                                                allie = rickert;
+                                              }
+                                            printf("Vous vous enfoncez plus profondemment, au creux des tenebres.\n");
+                                            etage++;
+                                        }
+                              } //accolade fin 30
 
 Color(15,0);    //Phase de combat
                 while (finCombat == 0) { // Choix action pp
@@ -861,7 +940,108 @@ Color(15,0);      printf("\n");
                                               }
                                             }
 
-                      // Repercussion moves spe.
+Color(15,0);              // gerer allies
+                if (nbreAllie == 1) {
+                  srand(time(NULL));
+                  int allieMax = 1, allieMin = 0;
+                  allieRdm = (rand() %(allieMax - allieMin + 1)) + allieMin;
+                    if (allie.index == 1 || allie.index == 2 || allie.index == 3) {
+                      if (allieRdm == 0) {
+                        if (nbreEnnemis == 1) {
+                            allie.cible == 0;
+                            printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                            printf("%s perd %d PV !\n", monstre1.nom, allie.capacites_list[0]->degats);
+                            monstre1.pv = monstre1.pv - allie.capacites_list[0]->degats;
+                        } else if (nbreEnnemis == 2) {
+                          srand(time(NULL));
+                          allie.cible = (rand() %(1 - 0 + 1)) + 0;
+                            if (allie.cible == 0) {
+                              printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                              printf("%s perd %d PV !\n", monstre1.nom, allie.capacites_list[0]->degats);
+                              monstre1.pv = monstre1.pv - allie.capacites_list[0]->degats;
+                            } else if (allie.cible == 1) {
+                              printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                              printf("%s perd %d PV !\n", monstre2.nom, allie.capacites_list[0]->degats);
+                              monstre2.pv = monstre2.pv - allie.capacites_list[0]->degats;
+                            }
+                        } else if (nbreEnnemis == 3) {
+                          srand(time(NULL));
+                          allie.cible = (rand() %(2 - 0 + 1)) + 0;
+                          if (allie.cible == 0) {
+                            printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                            printf("%s perd %d PV !\n", monstre1.nom, allie.capacites_list[0]->degats);
+                            monstre1.pv = monstre1.pv - allie.capacites_list[0]->degats;
+                          } else if (allie.cible == 1) {
+                            printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                            printf("%s perd %d PV !\n", monstre2.nom, allie.capacites_list[0]->degats);
+                            monstre2.pv = monstre2.pv - allie.capacites_list[0]->degats;
+                          } else if (allie.cible == 2) {
+                            printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                            printf("%s perd %d PV !\n", monstre3.nom, allie.capacites_list[0]->degats);
+                            monstre3.pv = monstre3.pv - allie.capacites_list[0]->degats;
+                          }
+                        } else if (nbreEnnemis == 4) {
+                          srand(time(NULL));
+                          allie.cible = (rand() %(3 - 0 + 1)) + 0;
+                          if (allie.cible == 0) {
+                            printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                            printf("%s perd %d PV !\n", monstre1.nom, allie.capacites_list[0]->degats);
+                            monstre1.pv = monstre1.pv - allie.capacites_list[0]->degats;
+                          } else if (allie.cible == 1) {
+                            printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                            printf("%s perd %d PV !\n", monstre2.nom, allie.capacites_list[0]->degats);
+                            monstre2.pv = monstre2.pv - allie.capacites_list[0]->degats;
+                          } else if (allie.cible == 2) {
+                            printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                            printf("%s perd %d PV !\n", monstre3.nom, allie.capacites_list[0]->degats);
+                            monstre3.pv = monstre3.pv - allie.capacites_list[0]->degats;
+                          } else if (allie.cible == 3) {
+                            printf("%s utilise %s !\n", allie.nom, allie.capacites_list[0]->nom);
+                            printf("%s perd %d PV !\n", monstre4.nom, allie.capacites_list[0]->degats);
+                            monstre4.pv = monstre4.pv - allie.capacites_list[0]->degats;
+                          }
+                        }
+                    }
+                  }
+                      if (allie.index == 1 && allieRdm == 1) {
+                          printf("%s utilise %s\n", allie.nom, allie.capacites_list[1]->nom);
+                          printf("%s vous protege avec vigueur.\n", allie.nom);
+                          monstre1.capacites_list[0]->degats = monstre1.capacites_list[0]->degats/1.5;
+                          monstre1.capacites_list[1]->degats = monstre1.capacites_list[1]->degats/1.5;
+                            if (nbreEnnemis == 2) {
+                              monstre2.capacites_list[0]->degats = monstre2.capacites_list[0]->degats/1.5;
+                              monstre2.capacites_list[1]->degats = monstre2.capacites_list[1]->degats/1.5;
+                            }
+                            if (nbreEnnemis == 3) {
+                              monstre2.capacites_list[0]->degats = monstre2.capacites_list[0]->degats/1.5;
+                              monstre2.capacites_list[1]->degats = monstre2.capacites_list[1]->degats/1.5;
+                              monstre3.capacites_list[0]->degats = monstre3.capacites_list[0]->degats/1.5;
+                              monstre3.capacites_list[1]->degats = monstre3.capacites_list[1]->degats/1.5;
+                            }
+                            if (nbreEnnemis == 4) {
+                              monstre2.capacites_list[0]->degats = monstre2.capacites_list[0]->degats/1.5;
+                              monstre2.capacites_list[1]->degats = monstre2.capacites_list[1]->degats/1.5;
+                              monstre3.capacites_list[0]->degats = monstre3.capacites_list[0]->degats/1.5;
+                              monstre3.capacites_list[1]->degats = monstre3.capacites_list[1]->degats/1.5;
+                              monstre4.capacites_list[0]->degats = monstre4.capacites_list[0]->degats/1.5;
+                              monstre4.capacites_list[1]->degats = monstre4.capacites_list[1]->degats/1.5;
+                            }
+                      }
+                          if (allie.index == 2 && allieRdm == 1) {
+                            printf("%s vous soigne !\n", allie.nom);
+                            pp.pv = pp.pv + 20;
+                              if (pp.pv > pp.pvMax) {
+                                  pp.pv = pp.pvMax;
+                              }
+                          }
+                            if (allie.index == 3 && allieRdm == 1) {
+                                printf("%s augmente vos degats.\n", allie.nom);
+                                pp.capacites_list[0]->degats = pp.capacites_list[0]->degats*1.3;
+                                pp.capacites_list[2]->degats = pp.capacites_list[2]->degats*1.3;
+                                pp.capacites_list[3]->degats = pp.capacites_list[3]->degats*1.3;
+                            }
+              }
+Color(4,0);                    // Repercussion moves spe.
                       if (monstre1.actionM == 1){
                         if (monstre1.index == 4 && monstre1.pv > 0){ // chien
                           printf("%s augmente ses degats.\n", monstre1.nom);
@@ -1333,14 +1513,24 @@ Color (15,0);                        if (pp.pv <= 0) {
                         monstre4.statut = 0;
                     }
 
+
                                 // Affichage PV
                     if (pp.niveau < 5){            printf("\n%s | PV : %d / %d", pp.nom, pp.pv, pp.pvMax);} else if (pp.niveau >= 5){printf("\n%s | PV : %d / %d | Haine : %d", pp.nom, pp.pv, pp.pvMax, pp.haine);} Color(4,0); printf("           %s | PV : %d / %d\n", monstre1.nom, monstre1.pv, monstre1.pvMax);
-                                                                                                  if (nbreEnnemis > 1){printf("                                          %s | PV : %d / %d\n", monstre2.nom, monstre2.pv, monstre2.pvMax);}
+                    if (nbreAllie ==1){            printf("%s | PV : %d / %d", allie.nom, allie.pv, allie.pvMax);} if (nbreEnnemis > 1){printf("                                          %s | PV : %d / %d\n", monstre2.nom, monstre2.pv, monstre2.pvMax);}
                                                                                                    if (nbreEnnemis > 2){printf("                                         %s | PV : %d / %d\n", monstre3.nom, monstre3.pv, monstre3.pvMax);}
                                                                                                    if (nbreEnnemis > 3){printf("                                         %s | PV : %d / %d\n", monstre4.nom, monstre4.pv, monstre4.pvMax);}
 
                 } // Accolade fin combat
 
+
+                // pv allies
+                  allie.pv = allie.pv*0.90;
+                    if (allie.pv <= 0) {
+                        printf("Votre allie vous quitte, a jamais.\n");
+                        nbreAllie = 0;
+                    }
+
+                    
               //Gain de haine
               if (pp.niveau >= 5) {
                 pp.haine = pp.haine + (5*nbreEnnemis);
