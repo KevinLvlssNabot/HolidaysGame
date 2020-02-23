@@ -70,7 +70,7 @@ int main(int argc, char const *argv[]) {
 int newGame;
 int finPartie = 0;
 int finCombat = 0;
-int etage = 41;
+int etage = 1;
 int choixDirection;
 int nbreEnnemis;
 int ennemisRdm; int ennemisRdm1; int ennemisRdm2; int ennemisRdm3;
