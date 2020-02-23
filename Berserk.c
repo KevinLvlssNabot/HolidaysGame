@@ -1182,7 +1182,7 @@ Color(15,0);      printf("\n");
                                             pp.capacites_list[2]->degats = pp.capacites_list[2]->degats - monstre1.capacites_list[1]->defense;
                                             pp.capacites_list[3]->degats = pp.capacites_list[3]->degats - monstre1.capacites_list[1]->defense;
                                         }
-                                    } else if (monstre1.actionM == 2 && monstre1.pv > 0 && monstre1.statut == 0) {
+                                    } else if (monstre1.actionM == 2 && monstre1.pv > 0 && monstre1.statut == 0 && monstre1.index != 9) {
                                         printf("%s utilise %s.\n", monstre1.nom, monstre1.capacites_list[2]->nom);
                                         if (pp.cible == 0) {
                                             pp.capacites_list[0]->degats = pp.capacites_list[0]->degats - monstre1.capacites_list[2]->defense;
@@ -1384,7 +1384,7 @@ Color(4,0);                    // Repercussion moves spe.
 
                       if (monstre1.actionM == 3) {
                           printf("%s utilise %s et vous montre des souvenirs douloureux !\n", monstre1.nom, monstre1.capacites_list[3]->nom);
-                            if (allie.pv > 0) {
+                            if (nbreAllie == 1) {
                                 printf("%s subit des degats !\n", allie.nom);
                                 allie.pv = allie.pv - monstre1.capacites_list[3]->degats;
                             } else {
