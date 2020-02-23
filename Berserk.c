@@ -70,7 +70,7 @@ int main(int argc, char const *argv[]) {
 int newGame;
 int finPartie = 0;
 int finCombat = 0;
-int etage = 29;
+int etage = 1;
 int choixDirection;
 int nbreEnnemis;
 int ennemisRdm; int ennemisRdm1; int ennemisRdm2; int ennemisRdm3;
@@ -95,18 +95,22 @@ capacites balayage = {"Balayage", 10, 10, 0, 20}; // capacites lvl9
 capacites lourde = {"Frappe Lourde", 30, 30, 0, 0};
 capacites protection = {"Protection", 0, 0, 15, 0};
 capacites lamelio = {"Lamelioration"};
+capacites explosif = {"Explosif", 50, 50, 0, 40}; // capacites lvl15;
+capacites estocade = {"Estocade", 30, 30, 0, 0};
+capacites souvenirM = {"Souvenir", 20, 20, 0, 0};
 
 
 ennemis monstre1; ennemis monstre2; ennemis monstre3; ennemis monstre4; ennemis monstre5; ennemis monstre6;
 ennemis engeanceM = {"Engeance-Mineure", 20, 20, 15, 1, 0, NULL, 0, 1};
 ennemis sangsueG = {"Sangsue", 15, 15, 10, 1, 0, NULL, 0, 2};
-ennemis apotre1 = {"Apotroph", 60, 60, 30, 2, 0, NULL, 0, 3};
+ennemis apotre1 = {"Apotroph", 120, 120, 30, 2, 0, NULL, 0, 3};
 ennemis chien = {"Chien Possede", 25, 25, 15, 1, 0, NULL, 0, 4};
 ennemis apotre2 = {"L'invocant", 70, 70, 40, 1, 0, NULL, 0, 5};
 ennemis invocation = {"Invocation", 10, 10, 0, 0, 0, NULL, 0, 6};
 ennemis protecteur = {"Protecteur", 70, 70, 35, 1, 0, NULL, 0, 7};
 ennemis destructeur = {"Destructeur", 50, 50, 35, 0, 0, NULL, 0, 8};
-perso pp = {"", 1135, 1135, 0, 50, 10, NULL, 0, 0};
+ennemis griffith = {"Griffith", 500, 500, 200, 3, 0, NULL, 0, 9};
+perso pp = {"", 100, 100, 0, 50, 1, NULL, 0, 0};
 perso pipin ={"Pipin", 300, 300, 0, 0, 0, NULL, 0, 0, 1};
 perso casca ={"Casca", 150, 150, 0, 0, 0, NULL, 0, 0, 2};
 perso rickert ={"Rickert", 225, 225, 0, 0, 0, NULL, 0, 0, 3};
@@ -132,6 +136,7 @@ pp.capacites_list[0]= &trancher;
 pp.capacites_list[1]= &defendre;
 pp.capacites_list[2]= &coudepoing;
 pp.capacites_list[3]= &balayage;
+pp.capacites_list[4]= &explosif;
 pipin.capacites_list = malloc(5* sizeof(capacites*));
 pipin.capacites_list[0]= &lourde;
 pipin.capacites_list[1]= &protection;
@@ -166,7 +171,11 @@ destructeur.capacites_list[0]= &lourde;
 protecteur.capacites_list = malloc(5* sizeof(capacites*));
 protecteur.capacites_list[0]= &attaquer;
 protecteur.capacites_list[1]= &protection;
-
+griffith.capacites_list = malloc(5* sizeof(capacites*));
+griffith.capacites_list[0]= &frappe;
+griffith.capacites_list[1]= &protection;
+griffith.capacites_list[2]= &estocade;
+griffith.capacites_list[3]= &souvenirM;
 
 int repos = pp.pvMax*0.5;
 
@@ -207,33 +216,53 @@ while (finPartie == 0) {
     if (pp.haine >= 10 && pp.haine < 20) {
         pp.capacites_list[0]->degatsBase = 15 *1.10;
         pp.capacites_list[2]->degatsBase = 3 *1.10;
+        pp.capacites_list[3]->degatsBase = 10 *1.10;
+        pp.capacites_list[4]->degatsBase = 50 *1.10;
     } else if (pp.haine >= 20 && pp.haine < 30) {
         pp.capacites_list[0]->degatsBase = 15 *1.20;
         pp.capacites_list[2]->degatsBase = 3 *1.20;
+        pp.capacites_list[3]->degatsBase = 10 *1.20;
+        pp.capacites_list[4]->degatsBase = 50 *1.20;
     } else if (pp.haine >= 30 && pp.haine < 40) {
         pp.capacites_list[0]->degatsBase = 15 *1.30;
         pp.capacites_list[2]->degatsBase = 3 *1.30;
+        pp.capacites_list[3]->degatsBase = 10 *1.30;
+        pp.capacites_list[4]->degatsBase = 50 *1.30;
     } else if (pp.haine >= 40 && pp.haine < 50) {
         pp.capacites_list[0]->degatsBase = 15 *1.40;
         pp.capacites_list[2]->degatsBase = 3 *1.40;
+        pp.capacites_list[3]->degatsBase = 10 *1.40;
+        pp.capacites_list[4]->degatsBase = 50 *1.40;
     } else if (pp.haine >= 50 && pp.haine < 60) {
         pp.capacites_list[0]->degatsBase = 15 *1.50;
         pp.capacites_list[2]->degatsBase = 3 *1.50;
+        pp.capacites_list[3]->degatsBase = 10 *1.50;
+        pp.capacites_list[4]->degatsBase = 50 *1.50;
     } else if (pp.haine >= 60 && pp.haine < 70) {
         pp.capacites_list[0]->degatsBase = 15 *1.60;
         pp.capacites_list[2]->degatsBase = 3 *1.60;
+        pp.capacites_list[3]->degatsBase = 10 *1.60;
+        pp.capacites_list[4]->degatsBase = 50 *1.60;
     } else if (pp.haine >= 70 && pp.haine < 80) {
         pp.capacites_list[0]->degatsBase = 15 *1.70;
         pp.capacites_list[2]->degatsBase = 3 *1.70;
+        pp.capacites_list[3]->degatsBase = 10 *1.70;
+        pp.capacites_list[4]->degatsBase = 50 *1.70;
     } else if (pp.haine >= 80 && pp.haine < 90) {
         pp.capacites_list[0]->degatsBase = 15 *1.80;
         pp.capacites_list[2]->degatsBase = 3 *1.80;
+        pp.capacites_list[3]->degatsBase = 10 *1.80;
+        pp.capacites_list[4]->degatsBase = 50 *1.80;
     } else if (pp.haine >= 90 && pp.haine < 100) {
         pp.capacites_list[0]->degatsBase = 15 *1.90;
         pp.capacites_list[2]->degatsBase = 3 *1.90;
+        pp.capacites_list[3]->degatsBase = 10 *1.90;
+        pp.capacites_list[4]->degatsBase = 50 *1.90;
     } else if (pp.haine == 100) {
         pp.capacites_list[0]->degatsBase = 15 *2;
         pp.capacites_list[2]->degatsBase = 3 *2;
+        pp.capacites_list[3]->degatsBase = 10 *2;
+        pp.capacites_list[4]->degatsBase = 50 *2;
     }
 
 
@@ -464,12 +493,12 @@ Color(4,0);                    printf("Vous ressentez une presence, une aura plu
                           } // accolade fin etage 21
                             else if (etage > 21 && etage < 30) { // accolade etage > 21
                                 printf("Les ennemis, se nourrissant de la noirceur des lieux, deviennent plus forts.\n");
-                                  attaquer.degats = 10; attaquer.degatsBase = 10;
-                                  sucer.degats = 6; sucer.degatsBase = 6; sucer.volDeVie = 6;
-                                  morsure.degats = 20; morsure.degatsBase = 20;
-                                  engeanceM.pv = 40; engeanceM.pvMax = 40;
-                                  sangsueG.pv = 30; sangsueG.pvMax = 30;
-                                  chien.pv = 50; chien.pvMax = 50;
+                                attaquer.degats = 10; attaquer.degatsBase = 10;
+                                sucer.degats = 6; sucer.degatsBase = 6; sucer.volDeVie = 6;
+                                morsure.degats = 20; morsure.degatsBase = 20;
+                                engeanceM.pv = 40; engeanceM.pvMax = 40;
+                                sangsueG.pv = 30; sangsueG.pvMax = 30;
+                                chien.pv = 50; chien.pvMax = 50;
                                   srand(time(NULL));
                                   int MAX = 4, MIN = 1;
                                   nbreEnnemis = (rand() %(MAX - MIN + 1)) + MIN;
@@ -717,6 +746,246 @@ Color(4,0);                    printf("Vous ressentez une presence, une aura plu
                                             etage++;
                                         }
                               } //accolade fin 30
+                                else if (etage > 30 && etage < 40) { // accolade < 40
+                                  printf("Les ennemis, se nourrissant de la noirceur des lieux, deviennent encore plus forts.\n");
+                                    attaquer.degats = 20; attaquer.degatsBase = 20;
+                                    sucer.degats = 9; sucer.degatsBase = 9; sucer.volDeVie = 9;
+                                    morsure.degats = 30; morsure.degatsBase = 30;
+                                    engeanceM.pv = 80; engeanceM.pvMax = 80;
+                                    sangsueG.pv = 60; sangsueG.pvMax = 60;
+                                    chien.pv = 100; chien.pvMax = 100;
+                                    protecteur.pv = 140; protecteur.pvMax = 140;
+                                    destructeur.pv = 100; destructeur.pvMax = 100;
+                                    srand(time(NULL));
+                                    int MAX = 4, MIN = 1;
+                                    nbreEnnemis = (rand() %(MAX - MIN + 1)) + MIN;
+                                      if (nbreEnnemis == 1) {
+                                        pp.cible = 0;
+                                         MAXRDM = 4; MINRDM = 0;
+                                          ennemisRdm = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                          if (ennemisRdm == 0) {
+                                              monstre1 = sangsueG;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                          } else if (ennemisRdm == 1) {
+                                              monstre1 = engeanceM;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                          } else if (ennemisRdm == 2) {
+                                              monstre1 = chien;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                          } else if (ennemisRdm == 3) {
+                                              monstre1 = destructeur;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                          } else if (ennemisRdm == 4){
+                                              monstre1 = protecteur;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                          }
+                                      } else if (nbreEnnemis == 2) {
+                                          MAXRDM = 4; MINRDM = 0;
+                                          ennemisRdm = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                          ennemisRdm1 = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                          if (ennemisRdm == 0) {
+                                              monstre1 = sangsueG;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                          } else if (ennemisRdm == 1) {
+                                              monstre1 = engeanceM;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                          } else if (ennemisRdm == 2) {
+                                              monstre1 = chien;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                          }  else if (ennemisRdm == 3) {
+                                              monstre1 = destructeur;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                          } else if (ennemisRdm == 4){
+                                              monstre1 = protecteur;
+                                              printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                            }
+                                              if (ennemisRdm1 == 0) {
+                                                  monstre2 = sangsueG;
+                                                  printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                              } else if (ennemisRdm1 == 1) {
+                                                  monstre2 = engeanceM;
+                                                  printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                              } else if (ennemisRdm1 == 2) {
+                                                  monstre2 = chien;
+                                                  printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                              }  else if (ennemisRdm1 == 3) {
+                                                  monstre2 = destructeur;
+                                                  printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                              } else if (ennemisRdm1 == 4){
+                                                  monstre2 = protecteur;
+                                                  printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                              }
+                                      } else if (nbreEnnemis == 3) {
+                                                MAXRDM = 4; MINRDM = 0;
+                                                ennemisRdm = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                                ennemisRdm1 = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                                ennemisRdm2 = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                                if (ennemisRdm == 0) {
+                                                    monstre1 = sangsueG;
+                                                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                                } else if (ennemisRdm == 1) {
+                                                    monstre1 = engeanceM;
+                                                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                                } else if (ennemisRdm == 2) {
+                                                    monstre1 = chien;
+                                                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                                }  else if (ennemisRdm == 3) {
+                                                    monstre1 = destructeur;
+                                                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                                } else if (ennemisRdm == 4){
+                                                    monstre1 = protecteur;
+                                                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                                }
+                                                    if (ennemisRdm1 == 0) {
+                                                        monstre2 = sangsueG;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                                    } else if (ennemisRdm1 == 1) {
+                                                        monstre2 = engeanceM;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                                    } else if (ennemisRdm1 == 2) {
+                                                        monstre2 = chien;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                                    }  else if (ennemisRdm1 == 3) {
+                                                        monstre2 = destructeur;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                                    } else if (ennemisRdm1 == 4){
+                                                        monstre2 = protecteur;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                                    }
+                                                        if (ennemisRdm2 == 0) {
+                                                          monstre3 = sangsueG;
+                                                          printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                        } else if (ennemisRdm2 == 1) {
+                                                          monstre3 = engeanceM;
+                                                          printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                        } else if (ennemisRdm2 == 2) {
+                                                            monstre3 = chien;
+                                                            printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                        }  else if (ennemisRdm2 == 3) {
+                                                            monstre3 = destructeur;
+                                                            printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                        } else if (ennemisRdm2 == 4){
+                                                            monstre3 = protecteur;
+                                                            printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                        }
+                                      } else if (nbreEnnemis == 4) {
+                                        MAXRDM = 4; MINRDM = 0;
+                                        ennemisRdm = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                        ennemisRdm1 = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                        ennemisRdm2 = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                        ennemisRdm3 = (rand() %(MAXRDM - MINRDM + 1)) + MINRDM;
+                                        if (ennemisRdm == 0) {
+                                            monstre1 = sangsueG;
+                                            printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                        } else if (ennemisRdm == 1) {
+                                            monstre1 = engeanceM;
+                                            printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                        } else if (ennemisRdm == 2) {
+                                            monstre1 = chien;
+                                            printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                        }  else if (ennemisRdm == 3) {
+                                            monstre1 = destructeur;
+                                            printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                        } else if (ennemisRdm == 4){
+                                            monstre1 = protecteur;
+                                            printf("%s a ete attire par votre marque sacrificielle.\n", monstre1.nom);
+                                        }
+                                            if (ennemisRdm1 == 0) {
+                                                monstre2 = sangsueG;
+                                                printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                            } else if (ennemisRdm1 == 1) {
+                                                monstre2 = engeanceM;
+                                                printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                            } else if (ennemisRdm1 == 2) {
+                                                monstre2 = chien;
+                                                printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                            }  else if (ennemisRdm1 == 3) {
+                                                monstre2 = destructeur;
+                                                printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                            } else if (ennemisRdm1 == 4){
+                                                monstre2 = protecteur;
+                                                printf("%s a ete attire par votre marque sacrificielle.\n", monstre2.nom);
+                                            }
+                                                if (ennemisRdm2 == 0) {
+                                                  monstre3 = sangsueG;
+                                                  printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                } else if (ennemisRdm2 == 1) {
+                                                  monstre3 = engeanceM;
+                                                  printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                } else if (ennemisRdm2 == 2) {
+                                                    monstre3 = chien;
+                                                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                }  else if (ennemisRdm2 == 3) {
+                                                    monstre3 = destructeur;
+                                                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                } else if (ennemisRdm2 == 4){
+                                                    monstre3 = protecteur;
+                                                    printf("%s a ete attire par votre marque sacrificielle.\n", monstre3.nom);
+                                                }
+                                                    if (ennemisRdm3 == 0) {
+                                                        monstre4 = sangsueG;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre4.nom);
+                                                    } else if (ennemisRdm3 == 1) {
+                                                        monstre4 = engeanceM;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre4.nom);
+                                                    } else if (ennemisRdm3 == 2) {
+                                                        monstre4 = chien;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre4.nom);
+                                                    }  else if (ennemisRdm3 == 3) {
+                                                        monstre4 = destructeur;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre4.nom);
+                                                    } else if (ennemisRdm3 == 4){
+                                                        monstre4 = protecteur;
+                                                        printf("%s a ete attire par votre marque sacrificielle.\n", monstre4.nom);
+                                                    }
+                                      }
+                                } // accolade fin < 40
+                                  else if (etage == 40) {
+                                    finCombat = 1;
+          Color(15,0);                printf("Un lieu de repit, en ces terres souillees. Profitez en pour vous reposer.\n\n");
+                                      printf("Serait-ce son aura que vous ressentez ? Oui, rien ne vous est olus familier que ce sentiment.\n");
+                                      printf("Melange de haine, de peur et de joie, votre vengeance touche a sa fin.\n");
+                                      printf("Griffth, le faucon noir, celui qui a provoque votre quete, est tout proche.\n");
+                                        printf("Que souhaitez-vous faire ?\n\n");
+                                        printf("Se reposer [0], Partir [1]\n");
+                                        scanf("%d", &choixDirection);
+                                            if (choixDirection == 0) {
+                                                printf("Vous decidez de faire une pause, en ne fermant qu'un oeil, evidemment.\n");
+                                                printf("Vous recuperez %d PV !\n", repos);
+                                                pp.pv = pp.pv + repos;
+                                                pp.haine = 0;
+                                                    if (pp.pv > pp.pvMax) {
+                                                        pp.pv = pp.pvMax;
+                                                    }
+                                                while (choixDirection != 1) {
+                                                  printf("Que souhaitez-vous faire ?\n\n");
+                                                  printf("Partir [1]\n");
+                                                  scanf("%d", &choixDirection);
+                                                }
+                                                    if (choixDirection == 1) {
+                                                        printf("Vous vous enfoncez plus profondemment, au coeur des tenebres, vers ce qui semble etre, votre derniere danse.\n");
+                                                        etage++;
+                                                      }
+                                            } else if (choixDirection == 1) {
+                                                printf("Vous vous enfoncez plus profondemment, au creux des tenebres, vers ce qui semble etre, votre derniere danse.\n");
+                                                etage++;
+                                            }
+                                  } // accolade fin 40
+                                    else if (etage == 41) { // accolade etage 41
+Color(4,0);                             printf("%s, je savais que tu reviendrai, en ces lieux, qui representent pour toi le debut de ta propre guerre.\n", pp.nom);
+                                        printf("J'espere que tu ne te sens pas trop seul, depuis ce jour ou j'ai accompli mon reve. Pour ma part, je n'ai aucun regret.\n");
+                                        printf("Regarde-toi, cette haine qui te devore, cette haine qui t'as permi de rejoindre ces lieux, simplement pour me tuer, pour te venger.\n");
+                                        printf("Tu n'as pas l'air d'etre la pour parler, mais es-tu bien pret a m'affronter ?\n");
+                                        nbreEnnemis = 1;
+                                        monstre1 = griffith;
+                                            if (monstre1.pv <= 0) {
+                                                printf("Je me doutais.. Que tu serais bien plus fort.. Que tu serais innaretable.. Comme a l'epoque.. Je te.. Felicite.. %s\n", pp.nom);
+                                                printf(" ----------------------------------------------\n\n");
+                                                printf("|              FELICITATIONS ! %s              |\n\n", pp.nom);
+                                                printf(" ----------------------------------------------\n\n");
+                                                  finPartie = 1;
+                                            }
+                                    } // accolade fin 41
 
 Color(15,0);    //Phase de combat
                 while (finCombat == 0) { // Choix action pp
@@ -730,40 +999,54 @@ Color(15,0);      printf("\n");
                     } else if (pp.haine >= coudepoing.haineNecessaire) {
                       printf("%s[0] | %s[1] | %s[2]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom, pp.capacites_list[2]->nom);
                     }
-                  } else if (pp.niveau >= 9) {
+                  } else if (pp.niveau >= 9 && pp.niveau < 15) {
                         if (pp.haine < balayage.haineNecessaire) {
                           printf("%s[0] | %s[1]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom);
                         } else if (pp.haine >= balayage.haineNecessaire) {
-                          printf("%s[0] | %s[1] | %s[2] | %s [3]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom, pp.capacites_list[2]->nom, pp.capacites_list[3]->nom);
+                          printf("%s[0] | %s[1] | %s[2] | %s[3]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom, pp.capacites_list[2]->nom, pp.capacites_list[3]->nom);
                         }
+                  } else if (pp.niveau > 15) {
+                    if (pp.haine < balayage.haineNecessaire) {
+                      printf("%s[0] | %s[1]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom);
+                    } else if (pp.haine >= balayage.haineNecessaire && pp.haine < explosif.haineNecessaire) {
+                      printf("%s[0] | %s[1] | %s[2] | %s[3]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom, pp.capacites_list[2]->nom, pp.capacites_list[3]->nom);
+                    } else if (pp.haine >= balayage.haineNecessaire && pp.haine < explosif.haineNecessaire) {
+                      printf("%s[0] | %s[1] | %s[2] | %s[3] | %s[4]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom, pp.capacites_list[2]->nom, pp.capacites_list[3]->nom, pp.capacites_list[4]->nom);
+                    }
                   }
                     scanf("%d", &pp.choixAction);
-                        if ((pp.choixAction == 0 || pp.choixAction == 2) && (nbreEnnemis == 2)) {
+                        if ((pp.choixAction == 0 || pp.choixAction == 2 || pp.choixAction == 4) && (nbreEnnemis == 2)) {
                           if (pp.choixAction == 0) {
                             printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[0]->nom);
                           } else if (pp.choixAction == 2) {
                             printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[2]->nom);
+                          } else if (pp.choixAction == 4) {
+                            printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[4]->nom);
                           }
                           printf("[0] pour %s | [1] pour %s\n", monstre1.nom, monstre2.nom);
                           scanf("%d", &pp.cible);
-                        } else if ((pp.choixAction == 0 || pp.choixAction == 2) && nbreEnnemis == 3) {
+                        } else if ((pp.choixAction == 0 || pp.choixAction == 2 || pp.choixAction == 4) && nbreEnnemis == 3) {
                             if (pp.choixAction == 0) {
                               printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[0]->nom);
                             } else if (pp.choixAction == 2) {
                               printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[2]->nom);
+                            } else if (pp.choixAction == 4) {
+                              printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[4]->nom);
                             }
                           printf("[0] pour %s | [1] pour %s | [2] pour %s ?\n", monstre1.nom, monstre2.nom, monstre3.nom);
                           scanf("%d", &pp.cible);
-                        } else if ((pp.choixAction == 0 || pp.choixAction == 2) && nbreEnnemis == 4) {
+                        } else if ((pp.choixAction == 0 || pp.choixAction == 2 || pp.choixAction == 4) && nbreEnnemis == 4) {
                             if (pp.choixAction == 0) {
                               printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[0]->nom);
                             } else if (pp.choixAction == 2) {
                               printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[2]->nom);
+                            } else if (pp.choixAction == 4) {
+                              printf("Sur quel ennemi souhaitez-vous utiliser %s\n", pp.capacites_list[4]->nom);
                             }
                           printf("[0] pour %s | [1] pour %s | [2] pour %s | [3] pour %s ?\n", monstre1.nom, monstre2.nom, monstre3.nom, monstre4.nom);
                           scanf("%d", &pp.cible);
                           if (pp.choixAction == 2 && pp.haine < coudepoing.haineNecessaire) {
-                            printf("Vous n'etes pas suffisamment enrage pour faire cela. %s[0] | %s[1]\n", pp.capacites_list[0], pp.capacites_list[1]);
+                            printf("Vous n'etes pas suffisamment enrage pour faire cela. %s[0] | %s[1]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom);
                             while (pp.choixAction < 0 || pp.choixAction > 1) {
                               scanf("%d", &pp.choixAction);
                             }
@@ -771,17 +1054,35 @@ Color(15,0);      printf("\n");
                       }
                         if (pp.choixAction == 3 && pp.haine < balayage.haineNecessaire) {
                             if (pp.haine > coudepoing.haineNecessaire) {
-                                printf("Vous n'etes pas suffisamment enrage pour faire cela. %s[0] | %s[1] | %[2]\n", pp.capacites_list[0], pp.capacites_list[1], pp.capacites_list[2]);
+                                printf("Vous n'etes pas suffisamment enrage pour faire cela. %s[0] | %s[1] | %[2]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom, pp.capacites_list[2]->nom);
                                 while (pp.choixAction < 0 || pp.choixAction > 2) {
                                   scanf("%d", &pp.choixAction);
                                 }
                             } else if (pp.haine < coudepoing.haineNecessaire) {
-                                printf("Vous n'etes pas suffisamment enrage pour faire cela. %s[0] | %s[1]\n", pp.capacites_list[0], pp.capacites_list[1]);
+                                printf("Vous n'etes pas suffisamment enrage pour faire cela. %s[0] | %s[1]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom);
                                 while (pp.choixAction < 0 || pp.choixAction > 1) {
                                   scanf("%d", &pp.choixAction);
                                 }
                             }
                         }
+                          if (pp.choixAction == 4 && pp.haine < explosif.haineNecessaire) {
+                              if (pp.haine > balayage.haineNecessaire) {
+                                  printf("Vous n'etes pas suffisamment enrage pour faire cela. %s[0] | %s[1] | %[2] | %[3]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom, pp.capacites_list[2]->nom, pp.capacites_list[3]->nom);
+                                  while (pp.choixAction < 0 || pp.choixAction > 3) {
+                                    scanf("%d", &pp.choixAction);
+                                  }
+                              } else if (pp.haine < balayage.haineNecessaire && pp.haine > coudepoing.haineNecessaire) {
+                                  printf("Vous n'etes pas suffisamment enrage pour faire cela. %s[0] | %s[1] | %s[2]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom, pp.capacites_list[2]->nom);
+                                  while (pp.choixAction < 0 || pp.choixAction > 2) {
+                                    scanf("%d", &pp.choixAction);
+                                  }
+                              } else if (pp.haine < coudepoing.haineNecessaire) {
+                                  printf("Vous n'etes pas suffisamment enrage pour faire cela. %s[0] | %s[1]\n", pp.capacites_list[0]->nom, pp.capacites_list[1]->nom);
+                                  while (pp.choixAction < 0 || pp.choixAction > 1) {
+                                    scanf("%d", &pp.choixAction);
+                                  }
+                              }
+                          }
 
 
                         // Action ennemis
@@ -854,14 +1155,18 @@ Color(15,0);      printf("\n");
                                         monstre3.capacites_list[1]->degats = monstre3.capacites_list[1]->degats - pp.capacites_list[1]->defense;
                                         monstre4.capacites_list[0]->degats = monstre4.capacites_list[0]->degats - pp.capacites_list[1]->defense;
                                         monstre4.capacites_list[1]->degats = monstre4.capacites_list[1]->degats - pp.capacites_list[1]->defense;
-                                      } printf("%d\n", pp.capacites_list[1]->defense); printf("%d\n", monstre1.capacites_list[0]->degats);
+                                      }
                               } else if (pp.choixAction == 2) {
                                 printf("%s utilise %s.\n", pp.nom, pp.capacites_list[2]->nom);
                                 pp.haine = pp.haine - pp.capacites_list[2]->haineNecessaire;
                               } else if (pp.choixAction == 3) {
                                 printf("%s utilise %s.\n", pp.nom, pp.capacites_list[3]->nom);
                                 pp.haine = pp.haine - pp.capacites_list[3]->haineNecessaire;
+                              } else if (pp.choixAction == 4) {
+                                printf("%s utilise %s.\n", pp.nom, pp.capacites_list[4]->nom);
+                                pp.haine = pp.haine - pp.capacites_list[4]->haineNecessaire;
                               }
+
           Color(4,0);                        // Repercussion action ennemis
                                     if (monstre1.actionM == 0 && monstre1.pv > 0 && monstre1.statut == 0) {
                                         printf("%s utilise %s.\n", monstre1.nom, monstre1.capacites_list[0]->nom);
@@ -1060,9 +1365,34 @@ Color(4,0);                    // Repercussion moves spe.
                             pp.capacites_list[0]->degats = pp.capacites_list[0]->degats/1.5;
                             pp.capacites_list[2]->degats = pp.capacites_list[2]->degats/1.5;
                             pp.capacites_list[3]->degats = pp.capacites_list[3]->degats/1.5;
+                            pp.capacites_list[4]->degats = pp.capacites_list[4]->degats/1.5;
+                        } else if (monstre1.index == 9) {
+                          printf("%s se protege avec vigueur.\n", monstre1.nom);
+                          pp.capacites_list[0]->degats = pp.capacites_list[0]->degats /1.5;
+                          pp.capacites_list[2]->degats = pp.capacites_list[2]->degats /1.5;
+                          pp.capacites_list[3]->degats = pp.capacites_list[3]->degats /1.5;
+                          pp.capacites_list[4]->degats = pp.capacites_list[4]->degats/1.5;
                         }
                       }
 
+                      if (monstre1.actionM == 2) {
+                          if (monstre1.index == 9) {
+                              printf("%s utilise ses competences d'escrime !\n", monstre1.nom);
+                                pp.pv = pp.pv - monstre1.capacites_list[2]->degats;
+                          }
+                      }
+
+                      if (monstre1.actionM == 3) {
+                          printf("%s utilise %s et vous montre des souvenirs douloureux !\n", monstre1.nom, monstre1.capacites_list[3]->nom);
+                            if (allie.pv > 0) {
+                                printf("%s subit des degats !\n", allie.nom);
+                                allie.pv = allie.pv - monstre1.capacites_list[3]->degats;
+                            } else {
+                                printf("%s perd des PV et voit sa haine se reduire !\n", pp.nom);
+                                pp.pv = pp.pv - monstre1.capacites_list[3]->degats;
+                                pp.haine = pp.haine - 10;
+                            }
+                      }
                           // Soin invocation
                       if (monstre2.actionM == 0) {
                         if (monstre2.index == 6 && monstre2.pv > 0) {
@@ -1112,6 +1442,7 @@ Color(4,0);                    // Repercussion moves spe.
                             pp.capacites_list[0]->degats = pp.capacites_list[0]->degats /1.5;
                             pp.capacites_list[2]->degats = pp.capacites_list[2]->degats /1.5;
                             pp.capacites_list[3]->degats = pp.capacites_list[3]->degats /1.5;
+                            pp.capacites_list[4]->degats = pp.capacites_list[4]->degats/1.5;
                         }
                       }
                           if (monstre3.actionM == 1) {
@@ -1158,6 +1489,7 @@ Color(4,0);                    // Repercussion moves spe.
                                 pp.capacites_list[0]->degats = pp.capacites_list[0]->degats /1.5;
                                 pp.capacites_list[2]->degats = pp.capacites_list[2]->degats /1.5;
                                 pp.capacites_list[3]->degats = pp.capacites_list[3]->degats /1.5;
+                                pp.capacites_list[4]->degats = pp.capacites_list[4]->degats/1.5;
                             }
                           }
                               if (monstre4.actionM == 1) {
@@ -1169,8 +1501,11 @@ Color(4,0);                    // Repercussion moves spe.
                                     pp.capacites_list[0]->degats = pp.capacites_list[0]->degats /1.5;
                                     pp.capacites_list[2]->degats = pp.capacites_list[2]->degats /1.5;
                                     pp.capacites_list[3]->degats = pp.capacites_list[3]->degats /1.5;
+                                    pp.capacites_list[4]->degats = pp.capacites_list[4]->degats/1.5;
                                 }
                               }
+
+
 
 
 
@@ -1205,7 +1540,7 @@ Color(4,0);                    // Repercussion moves spe.
                                       }
                                   }
                                     if (pp.choixAction == 2) {
-                                        if (pp.cible == 0) {
+                                        if (pp.cible == 0 && monstre1.index != 9) {
                                           printf("%s perd %d PV et se retrouve paralyse !\n", monstre1.nom, pp.capacites_list[2]->degats);
                                           monstre1.pv = monstre1.pv - pp.capacites_list[2]->degats;
                                           monstre1.statut = 1;
@@ -1243,6 +1578,23 @@ Color(4,0);                    // Repercussion moves spe.
                                               monstre4.pv = monstre4.pv - pp.capacites_list[3]->degats;
                                             }
                                       }
+
+                                          if (pp.choixAction == 4) {
+                                              if (pp.cible == 0) {
+                    Color (15,0);               printf("%s perd %d PV !\n", monstre1.nom, pp.capacites_list[4]->degats);
+                                                monstre1.pv = monstre1.pv - pp.capacites_list[4]->degats;
+                                              } else if (pp.cible == 1) {
+                                                printf("%s perd %d PV !\n", monstre2.nom, pp.capacites_list[4]->degats);
+                                                monstre2.pv = monstre2.pv - pp.capacites_list[4]->degats;
+                                              } else if (pp.cible == 2) {
+                                                printf("%s perd %d PV !\n", monstre3.nom, pp.capacites_list[4]->degats);
+                                                monstre3.pv = monstre3.pv - pp.capacites_list[4]->degats;
+                                              } else if (pp.cible == 3) {
+                                                printf("%s perd %d PV !\n", monstre4.nom, pp.capacites_list[4]->degats);
+                                                monstre4.pv = monstre4.pv - pp.capacites_list[4]->degats;
+                                              }
+                                          }
+
 
                                           if (monstre1.statut == 0){
     Color (4,0);                           if (monstre1.actionM == 0 && monstre1.pv > 0) {
@@ -1461,6 +1813,11 @@ Color (15,0);                        if (pp.pv <= 0) {
                                             printf("\nVous etes desormais niveau 9, vous pouvez maintenant utiliser %s, une attaque infligeant des degats a tout les ennemis.\n", balayage.nom);
                                             Sleep(5000);
                                         }
+                                        if (pp.niveau == 15) {
+                                          printf("\nVous etes desormais niveau 9, vous pouvez maintenant utiliser %s, une attaque infligeant de gros degats.\n", explosif.nom);
+                                          Sleep(5000);
+
+                                        }
                                   }
 
 
@@ -1475,11 +1832,16 @@ Color (15,0);                        if (pp.pv <= 0) {
               if (pp.niveau >= 9) {
                 pp.capacites_list[3]->degats = pp.capacites_list[3]->degatsBase;
               }
-
+              if (pp.niveau >= 15) {
+                pp.capacites_list[4]->degats = pp.capacites_list[4]->degatsBase;
+              }
             monstre1.capacites_list[0]->degats = monstre1.capacites_list[0]->degatsBase;
             monstre1.capacites_list[1]->degats = monstre1.capacites_list[1]->degatsBase;
                 if (monstre1.max >= 2) {
                   monstre1.capacites_list[2]->degats = monstre1.capacites_list[2]->degatsBase;
+                }
+                if (monstre1.max >= 3) {
+                  monstre1.capacites_list[3]->degats = monstre1.capacites_list[3]->degatsBase;
                 }
             if (nbreEnnemis == 2) {
               monstre2.capacites_list[0]->degats = monstre2.capacites_list[0]->degatsBase;
@@ -1530,7 +1892,7 @@ Color (15,0);                        if (pp.pv <= 0) {
                         nbreAllie = 0;
                     }
 
-                    
+
               //Gain de haine
               if (pp.niveau >= 5) {
                 pp.haine = pp.haine + (5*nbreEnnemis);
